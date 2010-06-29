@@ -144,6 +144,36 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeDelete()
     {
+        $valid = $this->hasRequiredParameters($this->requiredParams);
+        if ($valid instanceof Frapi_Error) {
+            return $valid;
+        }
+
+        $username   = $this->getParam('username');
+        $password   = $this->getParam('password');
+        $project_id = $this->getParam('project_id', self::TYPE_INT);
+
+        if (!$project_id) {
+            throw new Frapi_Error('PARAM_ERROR', 'Missing Project ID', 401);
+        }
+
+        // Attempt to login as user, a little bit of a hack as we currently
+        // require the $_POST['login'] var to be set as well as a global AppUI
+        $AppUI              = new CAppUI;
+        $GLOBALS['AppUI']   = $AppUI;
+        $_POST['login']     = 'login';
+
+        if (!$AppUI->login($username, $password)) {
+            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+        }
+
+        $project = new CProject();
+        $project->load($project_id);
+        if (!$project->delete($AppUI)) {
+            throw new Frapi_Error('PERMISSION_ERROR', 'You do not have permission to delete this', 401);
+        }
+
+        $this->data['success'] = true;
         return $this->toArray();
     }
 
