@@ -98,13 +98,15 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         }
 
         // User has permission so load the project for display
-        $project->load($project_id);
-        $this->data['project'] = (array)$project;
+        $project = (array)$project->load($project_id);
 
         // Remove the data that is not for display
-        unset($this->data['project']['_tbl_prefix'], $this->data['project']['_tbl'],
-            $this->data['project']['_tbl_key'], $this->data['project']['_error'],
-            $this->data['project']['_query']);
+        unset(
+            $project['tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
+            $project['_error'], $project['_query']
+        );
+
+        $this->data['project'] = $project;
 
         return $this->toArray();
     }
