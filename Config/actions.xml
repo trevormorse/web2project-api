@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<frapi-config>
+ <actions>
+  <action>
+   <name>Testing1</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Testing 1 and editing from the new configuration location.</description>
+   <route>/testing/1</route>
+   <hash>6f1e8805cc0451de243b0432b15feb48f33383f9</hash>
+   <parameters>
+    <parameter>
+     <name>bazinga</name>
+     <required>1</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Testing2</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <route>/testing/2</route>
+   <hash>500286218fe54ed4b7e8a8ce58ea4d947fb4f658</hash>
+   <parameters>
+    <parameter>
+     <name>name</name>
+     <required>1</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Project</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Handles request for projects.</description>
+   <route>/project/:project_id</route>
+   <hash>2a0129dd954d604c7036faf5302f5b05ee0615c4</hash>
+   <parameters>
+    <parameter>
+     <name>username</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>password</name>
+     <required>1</required>
+    </parameter>
+   </parameters>
+  </action>
+ </actions>
+</frapi-config>

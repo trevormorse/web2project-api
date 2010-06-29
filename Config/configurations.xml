@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<frapi-config>
+ <configurations>
+  <configuration>
+   <key>db_hostname</key>
+   <value>localhost</value>
+  </configuration>
+  <configuration>
+   <key>db_username</key>
+   <value>root</value>
+  </configuration>
+  <configuration>
+   <key>db_password</key>
+   <value>password</value>
+  </configuration>
+  <configuration>
+   <key>db_database</key>
+   <value>test</value>
+  </configuration>
+  <configuration>
+   <key>api_url</key>
+   <value>api.frapi</value>
+  </configuration>
+  <configuration>
+   <key>cache</key>
+   <value>apc</value>
+  </configuration>
+ </configurations>
+</frapi-config>
