@@ -68,8 +68,8 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             return $valid;
         }
 
-        $username   = $this->getParam('username', self::TYPE_STRING);
-        $password   = $this->getParam('password', self::TYPE_STRING);
+        $username   = $this->getParam('username');
+        $password   = $this->getParam('password');
         $project_id = $this->getParam('project_id', self::TYPE_INT);
 
         if (!$project_id) {
@@ -99,36 +99,12 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // User has permission so load the project for display
         $project->load($project_id);
+        $this->data['project'] = (array)$project;
 
-        $this->data['project_id']               = $project->project_id;
-        $this->data['project_company']          = $project->project_company;
-        $this->data['project_department']       = $project->project_department;
-        $this->data['project_name']             = $project->project_name;
-        $this->data['project_short_name']       = $project->project_short_name;
-        $this->data['project_owner']            = $project->project_owner;
-        $this->data['project_url']              = $project->project_url;
-        $this->data['project_demo_url']         = $project->project_demo_url;
-        $this->data['project_start_date']       = $project->project_start_date;
-        $this->data['project_end_date']         = $project->project_end_date;
-        $this->data['project_actual_end_date']  = $project->project_actual_end_date;
-        $this->data['project_status']           = $project->project_status;
-        $this->data['project_percent_complete'] = $project->project_percent_complete;
-        $this->data['project_color_identifier'] = $project->project_color_identifier;
-        $this->data['project_description']      = $project->project_description;
-        $this->data['project_target_budget']    = $project->project_target_budget;
-        $this->data['project_scheduled_hours']  = $project->project_scheduled_hours;
-        $this->data['project_worked_hours']     = $project->project_worked_hours;
-        $this->data['project_task_count']       = $project->project_task_count;
-        $this->data['project_creator']          = $project->project_creator;
-        $this->data['project_active']           = $project->project_active;
-        $this->data['project_private']          = $project->project_private;
-        $this->data['project_departments']      = $project->project_departments;
-        $this->data['project_contacts']         = $project->project_contacts;
-        $this->data['project_priority']         = $project->project_priority;
-        $this->data['project_type']             = $project->project_type;
-        $this->data['project_parent']           = $project->project_parent;
-        $this->data['project_original_parent']  = $project->project_original_parent;
-        $this->data['project_location']         = $project->project_location;
+        // Remove the data that is not for display
+        unset($this->data['project']['_tbl_prefix'], $this->data['project']['_tbl'],
+            $this->data['project']['_tbl_key'], $this->data['project']['_error'],
+            $this->data['project']['_query']);
 
         return $this->toArray();
     }
