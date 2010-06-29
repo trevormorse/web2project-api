@@ -73,7 +73,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $project_id = $this->getParam('project_id', self::TYPE_INT);
 
         if (!$project_id) {
-            throw new Frapi_Error('PARAM_ERROR', 'Missing Project ID', 500);
+            throw new Frapi_Error('PARAM_ERROR', 'Missing Project ID', 401S);
         }
 
         // Attempt to login as user, a little bit of a hack as we currently
@@ -83,7 +83,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $_POST['login']     = 'login';
 
         if (!$AppUI->login($username, $password)) {
-            throw new Frapi_Error('AUTH_ERROR', 'Invalid Username or Password', 401);
+            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
         }
 
         $project = new CProject();
@@ -94,7 +94,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $allowed_projects = array_keys($allowed_projects);
 
         if (!in_array($project_id, $allowed_projects)) {
-            throw new Frapi_Error('AUTH_ERROR', 'You do not have permission to view this project', 401);
+            throw new Frapi_Error('PERMISSION_ERROR', 'You do not have permission to view this', 401);
         }
 
         // User has permission so load the project for display

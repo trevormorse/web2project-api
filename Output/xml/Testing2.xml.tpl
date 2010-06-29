@@ -1,1 +1,0 @@
-<hello><?php echo $data['name'];  ?></hello>
