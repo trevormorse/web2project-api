@@ -21,6 +21,12 @@ And now symlink all your WEB2PROJECT\_API\_PATH custom files into this directory
 
 	ln -s WEB2PROJECT\_API\_PATH/custom/* FRAPI_PATH/src/frapi/custom
 
+The last thing to do is to tell the web2project api where your web2project installation is located. To do this open the WEB2PROJECT\_API\_PATH//custom/AllFiles.php file and find this line:
+
+define('W2P_INSTALL_DIR', '/var/www/web2project');
+
+And update this to the directory of your web2project install.
+
 Restart apache and go to your "admin.frapi" page. You will see the actions and modules that the web2project API has to offer. 
 
 You can now start hacking and testing your actions (Which the code is located in the WEB2PROJECT\_API\_PATH//custom directory -- The actions (controllers) are in WEB2PROJECT\_API\_PATH/custom/Action)
