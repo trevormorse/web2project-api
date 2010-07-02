@@ -154,7 +154,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 			'dosql'                     => 'do_project_aed',
             'project_id'                =>  0,
             'project_creator'           => $AppUI->user_id,
-            'project_contacts'          =>  '', // TODO: How to handle contacts
+            'project_contacts'          => $this->getParam('project_contacts'),
             'project_name'              => $this->getParam('project_name'),
             'project_parent'            => $this->getParam('project_parent', self::TYPE_INT),
             'project_owner'             => $this->getParam('project_owner', self::TYPE_INT),
@@ -177,7 +177,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         $project = new CProject();
         $project->bind($post_data);
-        $error_array = $project->store();
+        $error_array = $project->store($AppUI);
 
         if ($error_array !== true) {
 
