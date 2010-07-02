@@ -165,12 +165,13 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             'project_status'            => $this->getParam('project_status', self::TYPE_INT),
             'project_description'       => $this->getParam('project_description'),
             'project_department'        => $this->getParam('project_department', self::TYPE_INT),
+            'project_active'            => $this->getParam('project_active', self::TYPE_INT),
             'company_id'                => $this->getParam('project_company', self::TYPE_INT),
         );
 
         $project = new CProject();
         $project->bind($post_data);
-        
+
         $error_array = $project->store($AppUI);
 
         if ($error_array !== true) {
@@ -248,6 +249,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             'project_status'            => $this->getParam('project_status', self::TYPE_INT),
             'project_description'       => $this->getParam('project_description'),
             'project_department'        => $this->getParam('project_department', self::TYPE_INT),
+            'project_active'            => $this->getParam('project_active', self::TYPE_INT),
         );
 
         $project = new CProject();
