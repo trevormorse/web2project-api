@@ -22,5 +22,12 @@
    <description>This error is returned when the user requesting does not have permissions to the entity.</description>
    <hash>a97e9ed38d51d4220f4d1b6eaffe8407b0ad5513</hash>
   </error>
+  <error>
+   <name>SAVE_ERROR</name>
+   <message>Unable to save.</message>
+   <http_code>401</http_code>
+   <description>This error is returned when there is an error saving an entity.</description>
+   <hash>77e7b61db9b70431b9276d3207c15a859f8fcc78</hash>
+  </error>
  </errors>
 </frapi-config>
