@@ -78,7 +78,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
-        $AppUI              = new CAppUI;
+        $AppUI              = new CAppUI();
         $GLOBALS['AppUI']   = $AppUI;
         $_POST['login']     = 'login';
 
@@ -107,7 +107,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         );
 
         $this->data['project'] = $project;
-
+        $this->data['success'] = true;
         return $this->toArray();
     }
 
@@ -132,6 +132,75 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executePut()
     {
+        $valid = $this->hasRequiredParameters($this->requiredParams);
+        if ($valid instanceof Frapi_Error) {
+            return $valid;
+        }
+
+        $username   = $this->getParam('username');
+        $password   = $this->getParam('password');
+
+        // Attempt to login as user, a little bit of a hack as we currently
+        // require the $_POST['login'] var to be set as well as a global AppUI
+        $AppUI              = new CAppUI();
+        $GLOBALS['AppUI']   = $AppUI;
+        $_POST['login']     = 'login';
+
+        if (!$AppUI->login($username, $password)) {
+            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+        }
+
+        $post_data = array(
+			'dosql'                     => 'do_project_aed',
+            'project_id'                =>  0,
+            'project_creator'           => $AppUI->user_id,
+            'project_contacts'          =>  '', // TODO: How to handle contacts
+            'project_name'              => $this->getParam('project_name'),
+            'project_parent'            => $this->getParam('project_parent', self::TYPE_INT),
+            'project_owner'             => $this->getParam('project_owner', self::TYPE_INT),
+            'project_company'           => $this->getParam('project_company', self::TYPE_INT),
+            'project_location'          => $this->getParam('project_location'),
+            'project_start_date'        => $this->getParam('project_start_date'),
+            'project_end_date'          => $this->getParam('project_end_date'),
+            'project_target_budget'     => $this->getParam('project_target_budget', self::TYPE_FLOAT),
+            'project_actual_budget'     => $this->getParam('project_actual_budget', self::TYPE_FLOAT),
+            'project_url'               => $this->getParam('project_url'),
+            'project_demo_url'          => $this->getParam('project_demo_url'),
+            'project_priority'          => $this->getParam('project_priority', self::TYPE_INT),
+            'project_short_name'        => $this->getParam('project_short_name'),
+            'project_color_identifier'  => $this->getParam('project_color_identifier'),
+            'project_type'              => $this->getParam('project_type', self::TYPE_INT),
+            'project_status'            => $this->getParam('project_status', self::TYPE_INT),
+            'project_description'       => $this->getParam('project_description'),
+            'project_department'        => $this->getParam('project_department', self::TYPE_INT),
+        );
+
+        $project = new CProject();
+        $project->bind($post_data);
+        $error_array = $project->store();
+
+        if ($error_array !== true) {
+
+            // Don't like this works but need to come up with a better way to
+            // handle multiple error messages
+            $error_string = '';
+            foreach ($error_array as $error) {
+                $error_string .= $error . '. ';
+            }
+
+            throw new FRAPI_ERROR('SAVE_ERROR', $error_string, 401);
+        }
+
+        $project = (array)$project;
+
+        // Remove the data that is not for display
+        unset(
+            $project['tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
+            $project['_error'], $project['_query']
+        );
+
+        $this->data['project'] = $project;
+        $this->data['success'] = true;
         return $this->toArray();
     }
 
@@ -159,7 +228,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
-        $AppUI              = new CAppUI;
+        $AppUI              = new CAppUI();
         $GLOBALS['AppUI']   = $AppUI;
         $_POST['login']     = 'login';
 
