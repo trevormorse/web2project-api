@@ -91,6 +91,7 @@ class Action_Listcontacts extends Frapi_Action implements Frapi_Action_Interface
         $contact = new CContact();
         $this->data['contacts'] = $contact->getAllowedRecords($AppUI->user_id);
         $this->data['success']  = true;
+
         return $this->toArray();
     }
 

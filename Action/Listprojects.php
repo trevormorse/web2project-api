@@ -91,6 +91,7 @@ class Action_Listprojects extends Frapi_Action implements Frapi_Action_Interface
         $project = new CProject();
         $this->data['projects'] = $project->getAllowedProjects($AppUI->user_id);
         $this->data['success']  = true;
+        
         return $this->toArray();
     }
 
