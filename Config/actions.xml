@@ -37,5 +37,23 @@
     </parameter>
    </parameters>
   </action>
+  <action>
+   <name>ListContacts</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Lists all the projects that the user is able to access.</description>
+   <route>listcontacts</route>
+   <hash>aa43a9f6cfc5209e54ddc88c662ed8bb08530b49</hash>
+   <parameters>
+    <parameter>
+     <name>username</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>password</name>
+     <required>1</required>
+    </parameter>
+   </parameters>
+  </action>
  </actions>
 </frapi-config>

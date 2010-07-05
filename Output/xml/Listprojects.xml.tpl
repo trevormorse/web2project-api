@@ -11,5 +11,5 @@
         <?php endforeach; ?>
         <?php endif; ?>
     </projects>
-    <success>1</success>
+    <success><?php echo $data['success']; ?></success>
 </response>
