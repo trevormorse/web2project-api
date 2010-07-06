@@ -7,7 +7,7 @@
  *
  * @link http://getfrapi.com
  * @author Frapi <frapi@getfrapi.com>
- * @link listcontacts
+ * @link /contacts
  */
 class Action_Listcontacts extends Frapi_Action implements Frapi_Action_Interface
 {
@@ -85,7 +85,7 @@ class Action_Listcontacts extends Frapi_Action implements Frapi_Action_Interface
         $_POST['login']     = 'login';
 
         if (!$AppUI->login($username, $password)) {
-            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+            throw new Frapi_Error('INVALID_LOGIN');
         }
 
         $contact = new CContact();

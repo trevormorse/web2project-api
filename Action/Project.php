@@ -7,7 +7,7 @@
  *
  * @link http://getfrapi.com
  * @author Frapi <frapi@getfrapi.com>
- * @link /project/:project_id
+ * @link /projects/:project_id
  */
 class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 {
@@ -72,10 +72,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $password   = $this->getParam('password');
         $project_id = $this->getParam('project_id', self::TYPE_INT);
 
-        if (!$project_id) {
-            throw new Frapi_Error('PARAM_ERROR', 'Missing Project ID', 401);
-        }
-
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
         $AppUI              = new CAppUI();
@@ -83,7 +79,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $_POST['login']     = 'login';
 
         if (!$AppUI->login($username, $password)) {
-            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+            throw new Frapi_Error('INVALID_LOGIN');
         }
 
         $project = new CProject();
@@ -94,7 +90,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $allowed_projects = array_keys($allowed_projects);
 
         if (!in_array($project_id, $allowed_projects)) {
-            throw new Frapi_Error('PERMISSION_ERROR', 'You do not have permission to view this', 401);
+            throw new Frapi_Error('PERMISSION_ERROR');
         }
 
         // User has permission so load the project for display
@@ -130,9 +126,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $password   = $this->getParam('password');
         $project_id = $this->getParam('project_id', self::TYPE_INT);
 
-        if (!$project_id) {
-            throw new Frapi_Error('PARAM_ERROR', 'Missing Project ID', 401);
-        }
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
         $AppUI              = new CAppUI();
@@ -140,7 +133,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $_POST['login']     = 'login';
 
         if (!$AppUI->login($username, $password)) {
-            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+            throw new Frapi_Error('INVALID_LOGIN');
         }
 
         $post_data = array(
@@ -175,16 +168,15 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         $error_array = $project->store($AppUI);
 
+        // Return all the validation messages
         if ($error_array !== true) {
 
-            // Don't like how this works but need to come up with a better way
-            // to handle multiple error messages
-            $error_string = '';
+            $error_message = '';
             foreach ($error_array as $error) {
-                $error_string .= $error . '. ';
+                $error_message .= $error . '. ';
             }
 
-            throw new FRAPI_ERROR('SAVE_ERROR', $error_string, 401);
+            throw new Frapi_Error('SAVE_ERROR', $error_message);
         }
 
         $project = (array)$project;
@@ -225,7 +217,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $_POST['login']     = 'login';
 
         if (!$AppUI->login($username, $password)) {
-            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+            throw new Frapi_Error('INVALID_LOGIN');
         }
 
         $post_data = array(
@@ -258,16 +250,15 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $project->bind($post_data);
         $error_array = $project->store($AppUI);
 
+        // Return all the validation messages
         if ($error_array !== true) {
 
-            // Don't like how this works but need to come up with a better way
-            // to handle multiple error messages
-            $error_string = '';
+            $error_message = '';
             foreach ($error_array as $error) {
-                $error_string .= $error . '. ';
+                $error_message .= $error . '. ';
             }
 
-            throw new FRAPI_ERROR('SAVE_ERROR', $error_string, 401);
+            throw new Frapi_Error('SAVE_ERROR', $error_message);
         }
 
         $project = (array)$project;
@@ -281,7 +272,10 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $this->data['project'] = $project;
         $this->data['success'] = true;
 
-        return $this->toArray();
+        return new Frapi_Response(array(
+            'code' => 201,
+            'data' => $this->data
+        ));
     }
 
     /**
@@ -302,10 +296,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $password   = $this->getParam('password');
         $project_id = $this->getParam('project_id', self::TYPE_INT);
 
-        if (!$project_id) {
-            throw new Frapi_Error('PARAM_ERROR', 'Missing Project ID', 401);
-        }
-
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
         $AppUI              = new CAppUI();
@@ -313,15 +303,15 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $_POST['login']     = 'login';
 
         if (!$AppUI->login($username, $password)) {
-            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+            throw new Frapi_Error('INVALID_LOGIN');
         }
 
         $project = new CProject();
         $project->load($project_id);
         if (!$project->delete($AppUI)) {
-            throw new Frapi_Error('PERMISSION_ERROR', 'You do not have permission to delete this', 401);
+            throw new Frapi_Error('PERMISSION_ERROR');
         }
-        
+
         $this->data['success'] = true;
 
         return $this->toArray();

@@ -7,7 +7,7 @@
  *
  * @link http://getfrapi.com
  * @author Frapi <frapi@getfrapi.com>
- * @link listprojects
+ * @link /projects
  */
 class Action_Listprojects extends Frapi_Action implements Frapi_Action_Interface
 {
@@ -85,13 +85,13 @@ class Action_Listprojects extends Frapi_Action implements Frapi_Action_Interface
         $_POST['login']     = 'login';
 
         if (!$AppUI->login($username, $password)) {
-            throw new Frapi_Error('INVALID_LOGIN', 'Invalid Username or Password', 401);
+            throw new Frapi_Error('INVALID_LOGIN');
         }
 
         $project = new CProject();
         $this->data['projects'] = $project->getAllowedProjects($AppUI->user_id);
         $this->data['success']  = true;
-        
+
         return $this->toArray();
     }
 

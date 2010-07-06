@@ -2,13 +2,6 @@
 <frapi-config>
  <errors>
   <error>
-   <name>PARAM_ERROR</name>
-   <message>Missing Parameter.</message>
-   <http_code>401</http_code>
-   <description>This error is returned when a required parameter is missing.</description>
-   <hash>94efe3d8e5576dd5cfe66236d0afe52aa9e66ad0</hash>
-  </error>
-  <error>
    <name>INVALID_LOGIN</name>
    <message>Invalid Username or Password.</message>
    <http_code>401</http_code>
@@ -26,7 +19,9 @@
    <name>SAVE_ERROR</name>
    <message>Unable to save.</message>
    <http_code>401</http_code>
-   <description>This error is returned when there is an error saving an entity.</description>
+   <description>This error is returned when there is an error saving an entity.&#13;
+&#13;
+The message will contain all the internal web2project validation messages.</description>
    <hash>77e7b61db9b70431b9276d3207c15a859f8fcc78</hash>
   </error>
  </errors>
