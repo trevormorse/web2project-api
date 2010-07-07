@@ -55,5 +55,23 @@
     </parameter>
    </parameters>
   </action>
+  <action>
+   <name>Contact</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Handles request for contacts.</description>
+   <route>/contacts/:contact_id</route>
+   <hash>ca0cc4f61ec255222a18eca9cf4ee27c47306299</hash>
+   <parameters>
+    <parameter>
+     <name>username</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>password</name>
+     <required>1</required>
+    </parameter>
+   </parameters>
+  </action>
  </actions>
 </frapi-config>
