@@ -13,8 +13,11 @@ define('FRAPI_CACHE_ADAPTER', 'apc');
 // Change this to define where you have web2project installed
 define('W2P_INSTALL_DIR', '/var/www/html/web2project');
 
+// The w2p include directory
+define('W2P_INCLUDE_DIR', DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR);
+
 // Bootstrap w2p
 require W2P_INSTALL_DIR . DIRECTORY_SEPARATOR . 'base.php';
-require_once W2P_BASE_DIR . '/includes/config.php';
-require_once W2P_BASE_DIR . '/includes/main_functions.php';
-require_once W2P_BASE_DIR . '/includes/db_adodb.php';
+require W2P_BASE_DIR . W2P_INCLUDE_DIR . 'config.php';
+require W2P_BASE_DIR . W2P_INCLUDE_DIR . 'main_functions.php';
+require W2P_BASE_DIR . W2P_INCLUDE_DIR . 'db_adodb.php';
