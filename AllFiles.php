@@ -1,4 +1,6 @@
 <?php
+// If you remove this. You might die.
+define('FRAPI_CACHE_ADAPTER', 'apc');
 
 // Use the constant CUSTOM_MODEL to access the custom model directory
 // IE: require CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'ModelName.php';
@@ -6,7 +8,7 @@
 
 // Frapi comes with Armchair by default. You can use it or decide to remove it.
 // You can find armchair at: git://github.com/till/armchair.git
-require CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'ArmChair' . DIRECTORY_SEPARATOR . 'ArmChair.php';
+//require CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'ArmChair' . DIRECTORY_SEPARATOR . 'ArmChair.php';
 
 // Change this to define where you have web2project installed
 define('W2P_INSTALL_DIR', '/var/www/html/web2project');
