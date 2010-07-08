@@ -39,8 +39,6 @@ class Action_Listcontacts extends Frapi_Action implements Frapi_Action_Interface
      */
     public function toArray()
     {
-        $this->data['username'] = $this->getParam('username', self::TYPE_OUTPUT);
-        $this->data['password'] = $this->getParam('password', self::TYPE_OUTPUT);
         return $this->data;
     }
 

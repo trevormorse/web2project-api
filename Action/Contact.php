@@ -39,8 +39,6 @@ class Action_Contact extends Frapi_Action implements Frapi_Action_Interface
      */
     public function toArray()
     {
-        $this->data['username'] = $this->getParam('username', self::TYPE_OUTPUT);
-        $this->data['password'] = $this->getParam('password', self::TYPE_OUTPUT);
         return $this->data;
     }
 
@@ -163,6 +161,28 @@ class Action_Contact extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             return $valid;
         }
+
+        $username   = $this->getParam('username');
+        $password   = $this->getParam('password');
+        $contact_id = $this->getParam('contact_id', self::TYPE_INT);
+
+        // Attempt to login as user, a little bit of a hack as we currently
+        // require the $_POST['login'] var to be set as well as a global AppUI
+        $AppUI              = new CAppUI();
+        $GLOBALS['AppUI']   = $AppUI;
+        $_POST['login']     = 'login';
+
+        if (!$AppUI->login($username, $password)) {
+            throw new Frapi_Error('INVALID_LOGIN');
+        }
+
+        $contact = new CContact();
+        $contact->load($contact_id);
+        if (!$contact->delete($AppUI)) {
+            throw new Frapi_Error('PERMISSION_ERROR');
+        }
+
+        $this->data['success'] = true;
 
         return $this->toArray();
     }
