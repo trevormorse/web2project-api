@@ -170,7 +170,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // Return all the validation messages
         if ($error_array !== true) {
-
             $error_message = '';
             foreach ($error_array as $error) {
                 $error_message .= $error . '. ';
@@ -221,7 +220,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         }
 
         $post_data = array(
-			'dosql'                     => 'do_project_aed',
             'project_id'                =>  0,
             'project_creator'           => $AppUI->user_id,
             'project_contacts'          => $this->getParam('project_contacts'),
@@ -252,7 +250,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // Return all the validation messages
         if ($error_array !== true) {
-
             $error_message = '';
             foreach ($error_array as $error) {
                 $error_message .= $error . '. ';
