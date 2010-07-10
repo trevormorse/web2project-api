@@ -19,7 +19,7 @@ Then remove all that's there
 
 And now symlink all your WEB2PROJECT\_API\_PATH custom files into this directory like such
 
-	ln -s WEB2PROJECT_API_PATH/* FRAPI_PATH/src/frapi/custom
+	ln -s WEB2PROJECT_API_PATH/src/* FRAPI_PATH/src/frapi/custom
 
 The last thing to do is to tell the web2project api where your web2project installation is located. To do this open the WEB2PROJECT\_API\_PATH//custom/AllFiles.php file and find this line:
 
