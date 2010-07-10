@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Action Listprojects
+ * Action Projects
  *
  * Lists all the projects that the user is able to access.
  *
@@ -9,7 +9,7 @@
  * @author Frapi <frapi@getfrapi.com>
  * @link /projects
  */
-class Action_Listprojects extends Frapi_Action implements Frapi_Action_Interface
+class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
 {
 
     /**

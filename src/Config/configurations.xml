@@ -19,7 +19,7 @@
   </configuration>
   <configuration>
    <key>api_url</key>
-   <value>api.frapi</value>
+   <value>api.web2project.local</value>
   </configuration>
   <configuration>
    <key>cache</key>

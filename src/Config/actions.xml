@@ -20,7 +20,7 @@
    </parameters>
   </action>
   <action>
-   <name>ListProjects</name>
+   <name>Projects</name>
    <enabled>1</enabled>
    <public>1</public>
    <description>Lists all the projects that the user is able to access.</description>
@@ -38,7 +38,7 @@
    </parameters>
   </action>
   <action>
-   <name>ListContacts</name>
+   <name>Contacts</name>
    <enabled>1</enabled>
    <public>1</public>
    <description>Lists all the projects that the user is able to access.</description>
