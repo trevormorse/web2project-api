@@ -26,6 +26,8 @@ class Projects_Test extends Test_Base {
 
     /**
      * Test getting list of projects from the w2p-api via json
+     *
+     * @return void
      */
     public function testGetNoIdJSON()
     {
@@ -70,6 +72,25 @@ class Projects_Test extends Test_Base {
             $this->assertRegExpOrNull('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',    $project->{4});
             $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING,                     $project->{5});
         }
+    }
+
+    /**
+     * Testing a get with invalid login
+     *
+     * @return void
+     */
+    public function testGetNoIdInvalidLoginJSON()
+    {
+        $result     = parent::makeRequest('projects', array(), 'GET', array());
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+        
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+        $this->assertEquals('Invalid Username or Password.',    $body->errors[0]->message);
+        $this->assertEquals('INVALID_LOGIN',                    $body->errors[0]->name);
+        $this->assertEquals('',                                 $body->errors[0]->at);
     }
 }
 ?>
