@@ -124,7 +124,73 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
             return $valid;
         }
 
-        return $this->toArray();
+        $username   = $this->getParam('username');
+        $password   = $this->getParam('password');
+
+        // Attempt to login as user, a little bit of a hack as we currently
+        // require the $_POST['login'] var to be set as well as a global AppUI
+        $AppUI              = new CAppUI();
+        $GLOBALS['AppUI']   = $AppUI;
+        $_POST['login']     = 'login';
+
+        if (!$AppUI->login($username, $password)) {
+            throw new Frapi_Error('INVALID_LOGIN');
+        }
+
+        $post_data = array(
+            'project_id'                =>  0,
+            'project_creator'           => $AppUI->user_id,
+            'project_contacts'          => $this->getParam('project_contacts'),
+            'project_name'              => $this->getParam('project_name'),
+            'project_parent'            => $this->getParam('project_parent', self::TYPE_INT),
+            'project_owner'             => $this->getParam('project_owner', self::TYPE_INT),
+            'project_company'           => $this->getParam('project_company', self::TYPE_INT),
+            'project_location'          => $this->getParam('project_location'),
+            'project_start_date'        => $this->getParam('project_start_date'),
+            'project_end_date'          => $this->getParam('project_end_date'),
+            'project_target_budget'     => $this->getParam('project_target_budget', self::TYPE_FLOAT),
+            'project_actual_budget'     => $this->getParam('project_actual_budget', self::TYPE_FLOAT),
+            'project_url'               => $this->getParam('project_url'),
+            'project_demo_url'          => $this->getParam('project_demo_url'),
+            'project_priority'          => $this->getParam('project_priority', self::TYPE_INT),
+            'project_short_name'        => $this->getParam('project_short_name'),
+            'project_color_identifier'  => $this->getParam('project_color_identifier'),
+            'project_type'              => $this->getParam('project_type', self::TYPE_INT),
+            'project_status'            => $this->getParam('project_status', self::TYPE_INT),
+            'project_description'       => $this->getParam('project_description'),
+            'project_department'        => $this->getParam('project_department', self::TYPE_INT),
+            'project_active'            => $this->getParam('project_active', self::TYPE_INT),
+        );
+
+        $project = new CProject();
+        $project->bind($post_data);
+        $error_array = $project->store($AppUI);
+
+        // Return all the validation messages
+        if ($error_array !== true) {
+            $error_message = '';
+            foreach ($error_array as $error) {
+                $error_message .= $error . '. ';
+            }
+
+            throw new Frapi_Error('SAVE_ERROR', $error_message);
+        }
+
+        $project = (array)$project;
+
+        // Remove the data that is not for display
+        unset(
+            $project['tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
+            $project['_error'], $project['_query']
+        );
+
+        $this->data['project'] = $project;
+        $this->data['success'] = true;
+
+        return new Frapi_Response(array(
+            'code' => 201,
+            'data' => $this->data
+        ));
     }
 
     /**
