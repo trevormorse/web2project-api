@@ -25,7 +25,58 @@ require_once 'test_base.php';
 class Projects_Test extends Test_Base {
 
     /**
+     * Sets up for each test
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->post_data = array(
+            'project_contacts'          => 1,
+            'project_name'              => '*API* Project Name',
+            'project_parent'            => 0,
+            'project_owner'             => 1,
+            'project_company'           => 1,
+            'project_location'          => '*API* Some Location',
+            'project_start_date'        => '20100710',
+            'project_end_date'          => '20100711',
+            'project_target_budget'     => 15400.37,
+            'project_actual_budget'     => 14000.00,
+            'project_url'               => 'http://api.example.org',
+            'project_demo_url'          => 'http://demo.api.example.org',
+            'project_priority'          => 1,
+            'project_short_name'        => '*API*',
+            'project_color_identifier'  => 'AAAAAA',
+            'project_type'              => 1,
+            'project_status'            => 1,
+            'project_description'       => '*API* long project description.',
+            'project_department'        => 1,
+            'project_active'            => 1,
+        );
+    }
+
+    /**
+     * Tears down after each test
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        unset($this->post_data);
+    }
+
+    /**
      * Test getting list of projects from the w2p-api via json
+     *
+     * @access public
      *
      * @return void
      */
@@ -72,25 +123,84 @@ class Projects_Test extends Test_Base {
             $this->assertRegExpOrNull('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',    $project->{4});
             $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING,                     $project->{5});
         }
+
+        $this->assertTrue(json_decode($body)->success);
     }
 
     /**
      * Testing a get with invalid login
      *
+     * @access public
+     *
      * @return void
      */
     public function testGetNoIdInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array(), 'GET', array());
+        $result     = parent::makeRequest('projects', array(), 'GET', null, array());
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
-        
+
         $this->assertEquals(401,                                $result->getStatus());
         $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
         $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
         $this->assertEquals('Invalid Username or Password.',    $body->errors[0]->message);
         $this->assertEquals('INVALID_LOGIN',                    $body->errors[0]->name);
         $this->assertEquals('',                                 $body->errors[0]->at);
+    }
+
+    /**
+     * Test putting a project
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPutJSON()
+    {
+        $result     = parent::makeRequest('projects', array(), 'PUT',  $this->post_data);
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(201,                                $result->getStatus());
+        $this->assertEquals('Created',                          $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+
+        $project = $body->project;
+
+        $this->assertTrue(is_numeric($project->project_id));
+        $this->assertEquals(32,                                                         count(get_object_vars($project)));
+        $this->assertEquals(1,                                                          $project->project_company);
+        $this->assertEquals(1,                                                          $project->project_department);
+        $this->assertEquals('*API* Project Name',                                       $project->project_name);
+        $this->assertEquals('*API*',                                                    $project->project_short_name);
+        $this->assertEquals(1,                                                          $project->project_owner);
+        $this->assertEquals('http://api.example.org',                                   $project->project_url);
+        $this->assertEquals('http://demo.api.example.org',                              $project->project_demo_url);
+        $this->assertEquals('2010-07-10 00:00:00',                                      $project->project_start_date);
+        $this->assertEquals('2010-07-11 23:59:59',                                      $project->project_end_date);
+        $this->assertEquals('',                                                         $project->project_actual_end_date);
+        $this->assertEquals(1,                                                          $project->project_status);
+        $this->assertEquals('',                                                         $project->project_percent_complete);
+        $this->assertEquals('AAAAAA',                                                   $project->project_color_identifier);
+        $this->assertEquals('*API* long project description.',                          $project->project_description);
+        $this->assertEquals(15400.37,                                                   $project->project_target_budget);
+        $this->assertEquals(14000,                                                      $project->project_actual_budget);
+        $this->assertEquals('',                                                         $project->project_scheduled_hours);
+        $this->assertEquals('',                                                         $project->project_worked_hours);
+        $this->assertEquals('',                                                         $project->project_task_count);
+        $this->assertEquals(1,                                                          $project->project_creator);
+        $this->assertEquals(1,                                                          $project->project_active);
+        $this->assertEquals(0,                                                          $project->project_private);
+        $this->assertEquals('',                                                         $project->project_departments);
+        $this->assertEquals(1,                                                          $project->project_contacts);
+        $this->assertEquals(1,                                                          $project->project_priority);
+        $this->assertEquals(1,                                                          $project->project_type);
+        $this->assertEquals($project->project_id,                                       $project->project_parent);
+        $this->assertEquals($project->project_id,                                       $project->project_original_parent);
+        $this->assertEquals('*API* Some Location',                                      $project->project_location);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  $project->project_updated);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  $project->project_created);
+        $this->assertTrue($body->success);
     }
 }
 ?>

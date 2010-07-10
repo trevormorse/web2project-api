@@ -98,7 +98,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // Remove the data that is not for display
         unset(
-            $project['tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
+            $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
             $project['_error'], $project['_query']
         );
 
@@ -182,7 +182,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // Remove the data that is not for display
         unset(
-            $project['tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
+            $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
             $project['_error'], $project['_query']
         );
 
@@ -206,7 +206,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             return $valid;
         }
 
-        return $this->toArray(); 
+        return $this->toArray();
     }
 
     /**

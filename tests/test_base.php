@@ -25,18 +25,29 @@ class Test_Base extends PHPUnit_Framework_TestCase
 {
 
     /**
+     * Data for posting/putting to api
+     *
+     * @access protected
+     * @var array
+     */
+    protected $post_data;
+
+    /**
      * Make a request to the web2project api
+     *
+     * @access protected
      *
      * @param  string action to be called
      * @param  array of parameters to pass to service
      * @param  string http_method type. GET, POST, PUT, DELETE, HEAD
      * @param  string type of request to make. Valid values = json, xml, html, printr, php, cli
+     * @param  array of post/put vars
      * @param  array of credentials. array('username' => 'username', 'password' => 'password');
      * @param  string the base url of the tests
      *
      * @return HTTP_Request2_Response the response
      */
-    protected function makeRequest($action, $parameters, $http_method = 'GET', $credentials=null, $url='http://api.web2project.local/', $type='json')
+    protected function makeRequest($action, $parameters, $http_method = 'GET', $post_array = null, $credentials=null, $url='http://api.web2project.local/', $type='json')
     {
         $url .= $action . '/';
 
@@ -50,8 +61,30 @@ class Test_Base extends PHPUnit_Framework_TestCase
         // add our type
         $url .= '.' . $type;
 
-        // Call the api and return results
         $http_request = new HTTP_Request2($url);
+
+        switch (strtoupper($http_method)) {
+
+            case 'PUT':
+                $http_request->setMethod(HTTP_Request2::METHOD_PUT);
+                break;
+
+            case 'POST':
+                $http_request->setMethod(HTTP_Request2::METHOD_POST);
+                break;
+
+            case 'DELETE':
+                $http_request->setMethod(HTTP_Request2::METHOD_DELETE);
+                break;
+
+            case 'HEAD':
+                $http_request->setMethod(HTTP_Request2::METHOD_HEAD);
+                break;
+
+            case 'GET':
+            default:
+                break;
+        }
         $url = $http_request->getUrl();
 
         if (is_null($credentials)) {
@@ -66,9 +99,26 @@ class Test_Base extends PHPUnit_Framework_TestCase
             ));
         }
 
+        if (!is_null($post_array) && count($post_array)) {
+            foreach ($post_array as $key => $value) {
+                $url->setQueryVariable($key, $value);
+            }
+        }
+
         return $http_request->send();
     }
 
+    /**
+     * Tests that the value passed matches the regular expression or is null
+     *
+     * @access protected
+     *
+     * @param  string regular expression to match against
+     * @param  mixed value to match
+     * @param  string message to return if it doesn't match
+     *
+     * @return
+     */
     protected function assertRegExpOrNull($reg_exp, $value, $message=null)
     {
         if (!is_null($value)) {

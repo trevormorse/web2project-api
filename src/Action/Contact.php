@@ -104,7 +104,7 @@ class Action_Contact extends Frapi_Action implements Frapi_Action_Interface
 
         // Remove the data that is not for display
         unset(
-            $contact_array['tbl_prefix'], $contact_array['_tbl'], $contact_array['_tbl_key'],
+            $contact_array['_tbl_prefix'], $contact_array['_tbl'], $contact_array['_tbl_key'],
             $contact_array['_error'], $contact_array['_query']
         );
 
