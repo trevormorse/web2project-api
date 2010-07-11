@@ -228,18 +228,16 @@ class Projects_Test extends Test_Base {
      * Testing a put with missing parameters
      *
      * @access public
-     * 
+     *
      * @return void
      */
     public function testPutIvalidParamsJSON()
     {
         unset(
             $this->post_data['project_name'], $this->post_data['project_short_name'],
-            $this->post_data['project_owner'], $this->post_data['project_owner'],
-            $this->post_data['project_creator'], $this->post_data['project_priority'],
+            $this->post_data['project_owner'], $this->post_data['project_priority'],
             $this->post_data['project_color_identifier'], $this->post_data['project_type'],
-            $this->post_data['project_status'], $this->post_data['project_url'],
-            $this->post_data['project_demo_url']
+            $this->post_data['project_status']
         );
 
         $result     = parent::makeRequest('projects', array(), 'PUT',  $this->post_data);
@@ -251,7 +249,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
 
         $this->assertEquals(
-            'CProject::store-check failed - project name is not set. CProject::store-check failed - project short name is not set. CProject::store-check failed - project owner is not set. CProject::store-check failed - project color identifier is not set. ',
+            'CProject::store-check failed - project name is not set. CProject::store-check failed - project short name is not set. CProject::store-check failed - project owner is not set. CProject::store-check failed - project priority is not set. CProject::store-check failed - project color identifier is not set. CProject::store-check failed - project type is not set. CProject::store-check failed - project status is not set. ',
             $body->errors[0]->message
         );
         $this->assertEquals('SAVE_ERROR',   $body->errors[0]->name);
