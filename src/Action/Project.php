@@ -158,9 +158,8 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             'project_type'              => $this->getParam('project_type'),
             'project_status'            => $this->getParam('project_status'),
             'project_description'       => $this->getParam('project_description'),
-            'project_department'        => $this->getParam('project_department'),
+            'project_departments'       => $this->getParam('project_departments'),
             'project_active'            => $this->getParam('project_active'),
-            'company_id'                => $this->getParam('project_company'),
         );
 
         $project = new CProject();
@@ -171,11 +170,15 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         // Return all the validation messages
         if ($error_array !== true) {
             $error_message = '';
-            foreach ($error_array as $error) {
-                $error_message .= $error . '. ';
-            }
 
-            throw new Frapi_Error('SAVE_ERROR', $error_message);
+            if (is_array($error_array)) {
+                foreach ($error_array as $error) {
+                    $error_message .= $error . '. ';
+                }
+                throw new Frapi_Error('SAVE_ERROR', $error_message);
+            } else {
+                throw new Frapi_Error('SAVE_ERROR');
+            }
         }
 
         $project = (array)$project;
