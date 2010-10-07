@@ -158,7 +158,7 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
             'project_type'              => $this->getParam('project_type'),
             'project_status'            => $this->getParam('project_status'),
             'project_description'       => $this->getParam('project_description'),
-            'project_departments'       => explode(',', $this->getParam('project_departments')),
+            'project_departments'       => $this->getParam('project_departments', self::TYPE_ARRAY),
             'project_active'            => $this->getParam('project_active'),
         );
 
