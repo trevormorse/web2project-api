@@ -62,7 +62,7 @@ class Projects_Test extends Test_Base {
             'project_type'              => 1,
             'project_status'            => 1,
             'project_description'       => '*API* long project description.',
-            'project_departments'       => 1,
+            'project_departments'       => array(1),
             'project_active'            => 1,
             'project_creator'           => 1,
         );
@@ -141,6 +141,47 @@ class Projects_Test extends Test_Base {
         $this->assertTrue(json_decode($body)->success);
     }
 
+    /**
+     * Test getting list of projects from the w2p-api via xml
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testGetNoIdXML()
+    {
+        $result     = parent::makeRequest('projects', array(), 'GET', null, null, 'http://w2p.api.frapi/', 'xml');
+        $headers    = $result->getHeader();
+        $body       = $result->getBody();
+
+        // Check our headers
+        $this->assertEquals(200,                                $result->getStatus());
+        $this->assertEquals('OK',                               $result->getReasonPhrase());
+        $this->assertEquals('application/xml; charset=utf-8',   $headers['content-type']);
+
+        //$projects = (array)json_decode($body)->projects;
+        $projects = simplexml_load_string($body);
+
+        foreach ($projects->projects->project as $project) {
+            $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_OBJECT, $project);
+
+            $this->assertObjectHasAttribute('project_id',               $project);
+            $this->assertObjectHasAttribute('project_color_identifier', $project);
+            $this->assertObjectHasAttribute('project_name',             $project);
+            $this->assertObjectHasAttribute('project_start_date',       $project);
+            $this->assertObjectHasAttribute('project_end_date',         $project);
+            $this->assertObjectHasAttribute('project_company',          $project);
+
+            $this->assertTrue(is_numeric((string)$project->project_id));
+            $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING,                     (string)$project->project_color_identifier);
+            $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING,                     (string)$project->project_name);
+            $this->assertRegExpOrBlank('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',   (string)$project->project_start_date);
+            $this->assertRegExpOrBlank('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',   (string)$project->project_end_date);
+            $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING,                     (string)$project->project_name);
+        }
+
+        $this->assertEquals(1, (int)$projects->success);
+    }
     /**
      * Testing a get with invalid login
      *
@@ -376,7 +417,7 @@ class Projects_Test extends Test_Base {
             'project_type'              => 2,
             'project_status'            => 2,
             'project_description'       => '*API* long project description updated.',
-            'project_departments'       => 2,
+            'project_departments'       => array(2),
             'project_active'            => 0,
             'project_creator'           => 1,
         );
