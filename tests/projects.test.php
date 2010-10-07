@@ -62,7 +62,7 @@ class Projects_Test extends Test_Base {
             'project_type'              => 1,
             'project_status'            => 1,
             'project_description'       => '*API* long project description.',
-            'project_department'        => 1,
+            'project_departments'       => 1,
             'project_active'            => 1,
             'project_creator'           => 1,
         );
@@ -150,7 +150,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetNoIdInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array(), 'GET', null, array());
+        $result     = parent::makeRequest('projects', array(), 'GET', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -184,7 +184,7 @@ class Projects_Test extends Test_Base {
         $this->assertTrue(is_numeric($project->project_id));
         $this->assertEquals(32,                                                         count(get_object_vars($project)));
         $this->assertEquals(1,                                                          $project->project_company);
-        $this->assertEquals(1,                                                          $project->project_department);
+        $this->assertEquals(array(1),                                                   $project->project_departments);
         $this->assertEquals('*API* Project Name',                                       $project->project_name);
         $this->assertEquals('*API*',                                                    $project->project_short_name);
         $this->assertEquals(1,                                                          $project->project_owner);
@@ -205,7 +205,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals(1,                                                          $project->project_creator);
         $this->assertEquals(1,                                                          $project->project_active);
         $this->assertEquals(0,                                                          $project->project_private);
-        $this->assertEquals('',                                                         $project->project_departments);
+        $this->assertEquals(array(1),                                                   $project->project_departments);
         $this->assertEquals(1,                                                          $project->project_contacts);
         $this->assertEquals(1,                                                          $project->project_priority);
         $this->assertEquals(1,                                                          $project->project_type);
@@ -229,7 +229,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPutInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array(), 'PUT', null, array());
+        $result     = parent::makeRequest('projects', array(), 'PUT', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -295,7 +295,6 @@ class Projects_Test extends Test_Base {
 
         $this->assertEquals($this->project_id,                  $project->project_id);
         $this->assertEquals(1,                                  $project->project_company);
-        $this->assertEquals(1,                                  $project->project_department);
         $this->assertEquals('*API* Project Name',               $project->project_name);
         $this->assertEquals('*API*',                            $project->project_short_name);
         $this->assertEquals(1,                                  $project->project_owner);
@@ -316,7 +315,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals(1,                                  $project->project_creator);
         $this->assertEquals(1,                                  $project->project_active);
         $this->assertEquals(0,                                  $project->project_private);
-        $this->assertEquals('',                                 $project->project_departments);
+        $this->assertEquals(array(1),                           $project->project_departments);
         $this->assertEquals(1,                                  $project->project_contacts);
         $this->assertEquals(1,                                  $project->project_priority);
         $this->assertEquals(1,                                  $project->project_type);
@@ -336,7 +335,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'GET', null, array());
+        $result     = parent::makeRequest('projects', array($this->project_id), 'GET', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -385,15 +384,15 @@ class Projects_Test extends Test_Base {
         $result     = parent::makeRequest('projects', array($this->project_id), 'POST', $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
+
         $this->assertEquals(200,                                $result->getStatus());
         $this->assertEquals('OK',                               $result->getReasonPhrase());
         $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
-
         $project = $body->project;
 
         $this->assertEquals($this->project_id,                                                  $project->project_id);
         $this->assertEquals(1,                                                                  $project->project_company);
-        $this->assertEquals(2,                                                                  $project->project_department);
+        $this->assertEquals(array(2),                                                           $project->project_departments);
         $this->assertEquals('*API* Project Name Updated',                                       $project->project_name);
         $this->assertEquals('*APIU*',                                                           $project->project_short_name);
         $this->assertEquals(2,                                                                  $project->project_owner);
@@ -413,7 +412,6 @@ class Projects_Test extends Test_Base {
         $this->assertEquals('',                                                                 $project->project_task_count);
         $this->assertEquals(1,                                                                  $project->project_creator);
         $this->assertEquals(0,                                                                  $project->project_active);
-        $this->assertEquals(2,                                                                  $project->project_departments);
         $this->assertEquals(2,                                                                  $project->project_contacts);
         $this->assertEquals(0,                                                                  $project->project_priority);
         $this->assertEquals(2,                                                                  $project->project_type);
@@ -432,7 +430,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPostInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'POST', null, array());
+        $result     = parent::makeRequest('projects', array($this->project_id), 'POST', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -504,7 +502,7 @@ class Projects_Test extends Test_Base {
      */
     public function testDeleteInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'DELETE', null, array());
+        $result     = parent::makeRequest('projects', array($this->project_id), 'DELETE', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 

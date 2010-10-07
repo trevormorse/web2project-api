@@ -47,7 +47,7 @@ class Test_Base extends PHPUnit_Framework_TestCase
      *
      * @return HTTP_Request2_Response the response
      */
-    protected function makeRequest($action, $parameters, $http_method = 'GET', $post_array = null, $credentials=null, $url='http://api.web2project.local/', $type='json')
+    protected function makeRequest($action, $parameters, $http_method = 'GET', $post_array = null, $credentials=null, $url='http://w2p.api.frapi/', $type='json')
     {
         $url .= $action . '/';
 

@@ -94,12 +94,20 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         }
 
         // User has permission so load the project for display
-        $project = (array)$project->load($project_id);
+        $project             = (array)$project->load($project_id);
+        $pd                  = CProject::getDepartments($AppUI, $project_id);
+        $project_departments = array();
+
+        foreach ($pd as $key => $value) {
+            $project_departments[] = $value['dept_id'];
+        }
+
+        $project['project_departments'] = $project_departments;
 
         // Remove the data that is not for display
         unset(
             $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
-            $project['_error'], $project['_query']
+            $project['_error'], $project['_query'], $project['_tbl_module']
         );
 
         $this->data['project'] = $project;
@@ -158,7 +166,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             'project_type'              => $this->getParam('project_type'),
             'project_status'            => $this->getParam('project_status'),
             'project_description'       => $this->getParam('project_description'),
-            'project_departments'       => $this->getParam('project_departments'),
+            'project_departments'       => explode(',', $this->getParam('project_departments')),
             'project_active'            => $this->getParam('project_active'),
         );
 
@@ -186,7 +194,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         // Remove the data that is not for display
         unset(
             $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
-            $project['_error'], $project['_query']
+            $project['_error'], $project['_query'], $project['_tbl_module']
         );
 
         $this->data['project'] = $project;

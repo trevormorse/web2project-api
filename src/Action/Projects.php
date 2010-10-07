@@ -158,7 +158,7 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
             'project_type'              => $this->getParam('project_type'),
             'project_status'            => $this->getParam('project_status'),
             'project_description'       => $this->getParam('project_description'),
-            'project_department'        => $this->getParam('project_department'),
+            'project_departments'       => explode(',', $this->getParam('project_departments')),
             'project_active'            => $this->getParam('project_active'),
         );
 
@@ -181,7 +181,7 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
         // Remove the data that is not for display
         unset(
             $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
-            $project['_error'], $project['_query']
+            $project['_error'], $project['_query'], $project['_tbl_module']
         );
 
         $this->data['project'] = $project;
