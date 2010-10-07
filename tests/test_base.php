@@ -127,5 +127,25 @@ class Test_Base extends PHPUnit_Framework_TestCase
 
         return;
     }
+
+    /**
+     * Tests that the value passed matches the regular expression or is blank
+     *
+     * @access protected
+     *
+     * @param  string regular expression to match against
+     * @param  mixed value to match
+     * @param  string message to return if it doesn't match
+     *
+     * @return
+     */
+    protected function assertRegExpOrBlank($reg_exp, $value, $message=null)
+    {
+        if ($value != '') {
+           return $this->assertRegExp($reg_exp, $value, $message);
+        }
+
+        return;
+    }
 }
 ?>
