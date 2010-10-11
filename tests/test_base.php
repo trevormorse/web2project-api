@@ -10,9 +10,8 @@
  */
 
 /**
- * PHPUnit base class
+ * Pear HTTP_Request2
  */
-require_once 'PHPUnit/Framework.php';
 require_once 'HTTP/Request2.php';
 
 /**

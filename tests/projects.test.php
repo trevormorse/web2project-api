@@ -204,6 +204,28 @@ class Projects_Test extends Test_Base {
     }
 
     /**
+     * Testing a get with invalid login
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testGetNoIdInvalidLoginXML()
+    {
+        $result     = parent::makeRequest('projects', array(), 'GET', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $headers    = $result->getHeader();
+        $body       = $result->getBody();
+        $xml        = simplexml_load_string($body);
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/xml; charset=utf-8',   $headers['content-type']);
+        $this->assertEquals('Invalid Username or Password.',    (string)$xml->errors->error->message);
+        $this->assertEquals('INVALID_LOGIN',                    (string)$xml->errors->error->name);
+        $this->assertEquals('',                                 (string)$xml->errors->error->at);
+    }
+
+    /**
      * Test putting a project
      *
      * @access public
