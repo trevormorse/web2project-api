@@ -284,6 +284,63 @@ class Projects_Test extends Test_Base {
     }
 
     /**
+     * Test putting a project
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPutXML()
+    {
+        $result     = parent::makeRequest('projects', array(), 'PUT',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $headers    = $result->getHeader();
+        $body       = $result->getBody();
+
+        $this->assertEquals(201,                                $result->getStatus());
+        $this->assertEquals('Created',                          $result->getReasonPhrase());
+        $this->assertEquals('application/xml; charset=utf-8',   $headers['content-type']);
+
+        $project = simplexml_load_string($body)->project;
+
+        $this->assertTrue(is_numeric((string)$project->project_id));
+        $this->assertEquals(32,                                                         count(get_object_vars($project)));
+        $this->assertEquals(1,                                                          (string)$project->project_company);
+        $this->assertEquals(array('project_department' => 1),                           (array)$project->project_departments);
+        $this->assertEquals('*API* Project Name',                                       (string)$project->project_name);
+        $this->assertEquals('*API*',                                                    (string)$project->project_short_name);
+        $this->assertEquals(1,                                                          (string)$project->project_owner);
+        $this->assertEquals('http://api.example.org',                                   (string)$project->project_url);
+        $this->assertEquals('http://demo.api.example.org',                              (string)$project->project_demo_url);
+        $this->assertEquals('2010-07-10 00:00:00',                                      (string)$project->project_start_date);
+        $this->assertEquals('2010-07-11 23:59:59',                                      (string)$project->project_end_date);
+        $this->assertEquals('',                                                         (string)$project->project_actual_end_date);
+        $this->assertEquals(1,                                                          (string)$project->project_status);
+        $this->assertEquals('',                                                         (string)$project->project_percent_complete);
+        $this->assertEquals('AAAAAA',                                                   (string)$project->project_color_identifier);
+        $this->assertEquals('*API* long project description.',                          (string)$project->project_description);
+        $this->assertEquals(15400.37,                                                   (string)$project->project_target_budget);
+        $this->assertEquals(14000,                                                      (string)$project->project_actual_budget);
+        $this->assertEquals('',                                                         (string)$project->project_scheduled_hours);
+        $this->assertEquals('',                                                         (string)$project->project_worked_hours);
+        $this->assertEquals('',                                                         (string)$project->project_task_count);
+        $this->assertEquals(1,                                                          (string)$project->project_creator);
+        $this->assertEquals(1,                                                          (string)$project->project_active);
+        $this->assertEquals(0,                                                          (string)$project->project_private);
+        $this->assertEquals(1,                                                          (string)$project->project_contacts);
+        $this->assertEquals(1,                                                          (string)$project->project_priority);
+        $this->assertEquals(1,                                                          (string)$project->project_type);
+        $this->assertEquals((string)$project->project_id,                               (string)$project->project_parent);
+        $this->assertEquals((string)$project->project_id,                               (string)$project->project_original_parent);
+        $this->assertEquals('*API* Some Location',                                      (string)$project->project_location);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  (string)$project->project_updated);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  (string)$project->project_created);
+        $this->assertEquals(1,                                                          (string)simplexml_load_string($body)->success);
+
+        // Clean up after ourselves
+        parent::makeRequest('projects/' . $project->project_id, array(), 'DELETE');
+    }
+
+    /**
      * Testing a put with invalid login
      *
      * @access public

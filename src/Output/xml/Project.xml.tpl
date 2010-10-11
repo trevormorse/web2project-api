@@ -6,7 +6,7 @@
                 <?php foreach ($value as $department_id): ?>
                     <project_department><?php echo $department_id; ?></project_department>
                 <?php endforeach; ?>
-                </<?php echo $key; ?>
+                </<?php echo $key; ?>>
             <?php else: ?>
                 <<?php echo $key; ?>><?php echo $value; ?></<?php echo $key; ?>>
             <?php endif; ?>

@@ -90,6 +90,8 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
         $this->data['projects'] = $project->getAllowedProjects($AppUI->user_id);
         $this->data['success']  = true;
 
+        $this->setTemplateFileName('ProjectsGet');
+
         return $this->toArray();
     }
 
@@ -176,8 +178,15 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
             throw new Frapi_Error('SAVE_ERROR', $error_message);
         }
 
-        $project = (array)$project;
+        $project             = (array)$project;
+        $pd                  = CProject::getDepartments($AppUI, $project['project_id']);
+        $project_departments = array();
 
+        foreach ($pd as $key => $value) {
+            $project_departments[] = $value['dept_id'];
+        }
+
+        $project['project_departments'] = $project_departments;
         // Remove the data that is not for display
         unset(
             $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
