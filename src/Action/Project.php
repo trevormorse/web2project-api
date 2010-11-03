@@ -113,6 +113,8 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         $this->data['project'] = $project;
         $this->data['success'] = true;
 
+        $this->setTemplateFileName('Project');
+
         return $this->toArray();
     }
 
@@ -199,6 +201,8 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         $this->data['project'] = $project;
         $this->data['success'] = true;
+
+        $this->setTemplateFileName('Project');
 
         return $this->toArray();
     }

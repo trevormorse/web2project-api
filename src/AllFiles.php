@@ -11,7 +11,7 @@ define('FRAPI_CACHE_ADAPTER', 'apc');
 //require CUSTOM_MODEL . DIRECTORY_SEPARATOR . 'ArmChair' . DIRECTORY_SEPARATOR . 'ArmChair.php';
 
 // Change this to define where you have web2project installed
-define('W2P_INSTALL_DIR', '/var/www/html/web2project.local');
+define('W2P_INSTALL_DIR', '/var/www/web2project.local');
 
 // The w2p include directory
 define('W2P_INCLUDE_DIR', DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR);
