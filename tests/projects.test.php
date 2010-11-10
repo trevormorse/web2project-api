@@ -663,7 +663,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals(0,                                                                  $project->project_priority);
         $this->assertEquals(2,                                                                  $project->project_type);
         $this->assertEquals(1,                                                                  $project->project_parent);
-        $this->assertEquals(1,                                                                  $project->project_original_parent);
+        $this->assertEquals($this->project_id,                                                  $project->project_original_parent);
         $this->assertEquals('*API* Some Location Updated',                                      $project->project_location);
         $this->assertRegExpOrNull('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',    $project->project_updated);
     }
@@ -738,7 +738,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals(0,                                                                  (string)$project->project_priority);
         $this->assertEquals(2,                                                                  (string)$project->project_type);
         $this->assertEquals(1,                                                                  (string)$project->project_parent);
-        $this->assertEquals(1,                                                                  (string)$project->project_original_parent);
+        $this->assertEquals($this->project_id,                                                  (string)$project->project_original_parent);
         $this->assertEquals('*API* Some Location Updated',                                      (string)$project->project_location);
         $this->assertRegExpOrNull('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',    (string)$project->project_updated);
         $this->assertEquals(1,                                                                  (string)simplexml_load_string($body)->success);
