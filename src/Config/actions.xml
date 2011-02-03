@@ -73,5 +73,41 @@
     </parameter>
    </parameters>
   </action>
+  <action>
+   <name>Task</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Handles requests for tasks.</description>
+   <route>/task/:id</route>
+   <hash>92605ec4bd981e9953d12d13250367036845b2c6</hash>
+   <parameters>
+    <parameter>
+     <name>username</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>password</name>
+     <required>1</required>
+    </parameter>
+   </parameters>
+  </action>
+  <action>
+   <name>Tasks</name>
+   <enabled>1</enabled>
+   <public>1</public>
+   <description>Lists all the tasks that the user is able to access.</description>
+   <route>/task</route>
+   <hash>f4280b1f39aec952c80303fd6bacd8d230ca8425</hash>
+   <parameters>
+    <parameter>
+     <name>username</name>
+     <required>1</required>
+    </parameter>
+    <parameter>
+     <name>password</name>
+     <required>1</required>
+    </parameter>
+   </parameters>
+  </action>
  </actions>
 </frapi-config>
