@@ -67,7 +67,7 @@ class Projects_Test extends Test_Base {
             'project_creator'           => 1,
         );
 
-        $result             = parent::makeRequest('projects', array(), 'PUT',  $this->post_data);
+        $result             = parent::makeRequest('project', array(), 'PUT',  $this->post_data);
         $body               = json_decode($result->getBody());
         $this->project_id   = $body->project->project_id;
     }
@@ -96,7 +96,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetNoIdJSON()
     {
-        $result     = parent::makeRequest('projects', array());
+        $result     = parent::makeRequest('project', array());
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -150,7 +150,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetNoIdXML()
     {
-        $result     = parent::makeRequest('projects', array(), 'GET', null, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array(), 'GET', null, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -191,7 +191,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetNoIdInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array(), 'GET', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('project', array(), 'GET', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -212,7 +212,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetNoIdInvalidLoginXML()
     {
-        $result     = parent::makeRequest('projects', array(), 'GET', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array(), 'GET', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = $result->getBody();
         $xml        = simplexml_load_string($body);
@@ -234,7 +234,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPutJSON()
     {
-        $result     = parent::makeRequest('projects', array(), 'PUT',  $this->post_data);
+        $result     = parent::makeRequest('project', array(), 'PUT',  $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -292,7 +292,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPutXML()
     {
-        $result     = parent::makeRequest('projects', array(), 'PUT',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array(), 'PUT',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -349,7 +349,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPutInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array(), 'PUT', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('project', array(), 'PUT', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -370,7 +370,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPutInvalidLoginXML()
     {
-        $result     = parent::makeRequest('projects', array(), 'PUT', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array(), 'PUT', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 
@@ -398,7 +398,7 @@ class Projects_Test extends Test_Base {
             $this->post_data['project_status']
         );
 
-        $result     = parent::makeRequest('projects', array(), 'PUT',  $this->post_data);
+        $result     = parent::makeRequest('project', array(), 'PUT',  $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -430,7 +430,7 @@ class Projects_Test extends Test_Base {
             $this->post_data['project_status']
         );
 
-        $result     = parent::makeRequest('projects', array(), 'PUT',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array(), 'PUT',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 
@@ -455,7 +455,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id));
+        $result     = parent::makeRequest('project', array($this->project_id));
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -508,7 +508,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetXML()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'GET', null, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'GET', null, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -561,7 +561,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'GET', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('project', array($this->project_id), 'GET', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -582,7 +582,7 @@ class Projects_Test extends Test_Base {
      */
     public function testGetInvalidLoginXML()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'GET', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'GET', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 
@@ -628,7 +628,7 @@ class Projects_Test extends Test_Base {
             'project_creator'           => 1
         );
 
-        $result     = parent::makeRequest('projects', array($this->project_id), 'POST', $this->post_data);
+        $result     = parent::makeRequest('project', array($this->project_id), 'POST', $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -702,7 +702,7 @@ class Projects_Test extends Test_Base {
             'project_creator'           => 1,
         );
 
-        $result     = parent::makeRequest('projects', array($this->project_id), 'POST', $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'POST', $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -753,7 +753,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPostInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'POST', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('project', array($this->project_id), 'POST', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -774,7 +774,7 @@ class Projects_Test extends Test_Base {
      */
     public function testPostInvalidLoginXML()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'POST', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'POST', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 
@@ -802,7 +802,7 @@ class Projects_Test extends Test_Base {
             $this->post_data['project_status']
         );
 
-        $result     = parent::makeRequest('projects', array($this->project_id), 'POST',  $this->post_data);
+        $result     = parent::makeRequest('project', array($this->project_id), 'POST',  $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -834,7 +834,7 @@ class Projects_Test extends Test_Base {
             $this->post_data['project_status']
         );
 
-        $result     = parent::makeRequest('projects', array($this->project_id), 'POST',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'POST',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 
@@ -859,7 +859,7 @@ class Projects_Test extends Test_Base {
      */
     public function testDeleteJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'DELETE');
+        $result     = parent::makeRequest('project', array($this->project_id), 'DELETE');
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -878,7 +878,7 @@ class Projects_Test extends Test_Base {
      */
     public function testDeleteXML()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'DELETE', null, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'DELETE', null, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = $result->getBody();
         $body       = simplexml_load_string($body);
@@ -898,7 +898,7 @@ class Projects_Test extends Test_Base {
      */
     public function testDeleteInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'DELETE', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('project', array($this->project_id), 'DELETE', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -919,7 +919,7 @@ class Projects_Test extends Test_Base {
      */
     public function testDeleteInvalidLoginXML()
     {
-        $result     = parent::makeRequest('projects', array($this->project_id), 'DELETE', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'DELETE', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 

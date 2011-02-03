@@ -6,7 +6,7 @@
    <enabled>1</enabled>
    <public>1</public>
    <description>Handles request for projects.</description>
-   <route>/projects/:project_id</route>
+   <route>/project/:project_id</route>
    <hash>2a0129dd954d604c7036faf5302f5b05ee0615c4</hash>
    <parameters>
     <parameter>
@@ -24,7 +24,7 @@
    <enabled>1</enabled>
    <public>1</public>
    <description>Lists all the projects that the user is able to access.</description>
-   <route>/projects</route>
+   <route>/project</route>
    <hash>1ab7c6d98e153defcc2267ec2998aa8f54f2bd7c</hash>
    <parameters>
     <parameter>
@@ -42,7 +42,7 @@
    <enabled>1</enabled>
    <public>1</public>
    <description>Lists all the projects that the user is able to access.</description>
-   <route>/contacts</route>
+   <route>/contact</route>
    <hash>aa43a9f6cfc5209e54ddc88c662ed8bb08530b49</hash>
    <parameters>
     <parameter>
@@ -60,7 +60,7 @@
    <enabled>1</enabled>
    <public>1</public>
    <description>Handles request for contacts.</description>
-   <route>/contacts/:contact_id</route>
+   <route>/contact/:contact_id</route>
    <hash>ca0cc4f61ec255222a18eca9cf4ee27c47306299</hash>
    <parameters>
     <parameter>

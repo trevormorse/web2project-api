@@ -58,7 +58,7 @@ class Contacts_Test extends Test_Base {
     public function tearDown()
     {
         parent::tearDown();
-        unset($this->post_data, $this->project_id);
+        unset($this->post_data, $this->contact_id);
     }
 
     /**
@@ -70,7 +70,7 @@ class Contacts_Test extends Test_Base {
      */
     public function testGetNoIdJSON()
     {
-        $result     = parent::makeRequest('contacts', array());
+        $result     = parent::makeRequest('contact', array());
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -96,7 +96,7 @@ class Contacts_Test extends Test_Base {
      */
     public function testGetNoIdInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('contacts', array(), 'GET', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('contact', array(), 'GET', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
