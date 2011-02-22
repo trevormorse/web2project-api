@@ -99,7 +99,7 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
                 $temp_task->_query, $temp_task->_error, $temp_task->_tbl_prefix,
                 $temp_task->_tbl, $temp_task->_tbl_key, $temp_task->_tbl_module
             );
-            $return_tasks[] = (array)$temp_task;
+            $return_tasks[$task_id] = (array)$temp_task;
         }
         $this->data['tasks']  = $return_tasks;
         $this->data['success'] = true;
@@ -166,26 +166,26 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
         }
 
         $post_data = array(
-            'task_id'                         => 0,
-            'task_name'                       => $this->getParam('task_name'),
-            'task_status'                     => $this->getParam('task_status'),
-            'task_percent_complete'           => $this->getParam('task_percent_complete'),
-            'task_milestone'                  => $this->getParam('task_milestone'),
-            'task_owner'                      => $this->getParam('task_owner'),
-            'task_access'                     => $this->getParam('task_access'),
-            'task_related_url'                => $this->getParam('task_related_url'),
-            'task_parent'                     => $this->getParam('task_parent'),
-            'task_type'                       => $this->getParam('task_type'),
-            'task_target_budget'              => $this->getParam('task_target_budget'),
-            'task_description'                => $this->getParam('task_description'),
-            'task_start_date'                 => $this->getParam('task_start_date'),
-            'task_end_date'                   => $this->getParam('task_end_date'),
-            'task_duration'                   => $this->getParam('task_duration'),
-            'task_duration_type'              => $this->getParam('task_duration_type'),
-            'task_dynamic'                    => $this->getParam('task_dynamic'),
+            'task_id'                        => 0,
+            'task_name'                      => $this->getParam('task_name'),
+            'task_status'                    => $this->getParam('task_status'),
+            'task_percent_complete'          => $this->getParam('task_percent_complete'),
+            'task_milestone'                 => $this->getParam('task_milestone'),
+            'task_owner'                     => $this->getParam('task_owner'),
+            'task_access'                    => $this->getParam('task_access'),
+            'task_related_url'               => $this->getParam('task_related_url'),
+            'task_parent'                    => $this->getParam('task_parent'),
+            'task_type'                      => $this->getParam('task_type'),
+            'task_target_budget'             => $this->getParam('task_target_budget'),
+            'task_description'               => $this->getParam('task_description'),
+            'task_start_date'                => $this->getParam('task_start_date'),
+            'task_end_date'                  => $this->getParam('task_end_date'),
+            'task_duration'                  => $this->getParam('task_duration'),
+            'task_duration_type'             => $this->getParam('task_duration_type'),
+            'task_dynamic'                   => $this->getParam('task_dynamic'),
             'task_allow_other_user_tasklogs' => $this->getParam('task_allow_other_user_tasklogs'),
-            'task_project'                    => $this->getParam('task_project'),
-            'task_priority'                   => $this->getParam('task_priority'),
+            'task_project'                   => $this->getParam('task_project'),
+            'task_priority'                  => $this->getParam('task_priority'),
         );
 
         // Include any files for handling module-specific requirements
