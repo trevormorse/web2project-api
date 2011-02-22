@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Action Task 
- * 
+ * Action Task
+ *
  * Handles requests for tasks.
- * 
+ *
  * @link http://getfrapi.com
  * @author Frapi <frapi@getfrapi.com>
  * @link /task/:id
@@ -14,7 +14,7 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
 
     /**
      * Required parameters
-     * 
+     *
      * @var An array of required parameters.
      */
     protected $requiredParams = array(
@@ -24,17 +24,17 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
 
     /**
      * The data container to use in toArray()
-     * 
+     *
      * @var A container of data to fill and return in toArray()
      */
     private $data = array();
 
     /**
      * To Array
-     * 
-     * This method returns the value found in the database 
+     *
+     * This method returns the value found in the database
      * into an associative array.
-     * 
+     *
      * @return array
      */
     public function toArray()
@@ -46,9 +46,9 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
 
     /**
      * Default Call Method
-     * 
+     *
      * This method is called when no specific request handler has been found
-     * 
+     *
      * @return array
      */
     public function executeAction()
@@ -57,15 +57,15 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             return $valid;
         }
-        
+
         return $this->toArray();
     }
 
     /**
      * Get Request Handler
-     * 
+     *
      * This method is called when a request is a GET
-     * 
+     *
      * @return array
      */
     public function executeGet()
@@ -74,15 +74,15 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             return $valid;
         }
-        
+
         return $this->toArray();
     }
 
     /**
      * Post Request Handler
-     * 
+     *
      * This method is called when a request is a POST
-     * 
+     *
      * @return array
      */
     public function executePost()
@@ -91,15 +91,15 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             return $valid;
         }
-        
+
         return $this->toArray();
     }
 
     /**
      * Put Request Handler
-     * 
+     *
      * This method is called when a request is a PUT
-     * 
+     *
      * @return array
      */
     public function executePut()
@@ -108,15 +108,15 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             return $valid;
         }
-        
+
         return $this->toArray();
     }
 
     /**
      * Delete Request Handler
-     * 
+     *
      * This method is called when a request is a DELETE
-     * 
+     *
      * @return array
      */
     public function executeDelete()
@@ -125,15 +125,37 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             return $valid;
         }
-        
+
+        $username = $this->getParam('username');
+        $password = $this->getParam('password');
+        $task_id  = $this->getParam('task_id', self::TYPE_INT);
+
+        // Attempt to login as user, a little bit of a hack as we currently
+        // require the $_POST['login'] var to be set as well as a global AppUI
+        $AppUI              = new CAppUI();
+        $GLOBALS['AppUI']   = $AppUI;
+        $_POST['login']     = 'login';
+
+        if (!$AppUI->login($username, $password)) {
+            throw new Frapi_Error('INVALID_LOGIN');
+        }
+
+        $task = new CTask();
+        $task->load($task_id);
+        if (!$task->delete($AppUI)) {
+            throw new Frapi_Error('PERMISSION_ERROR');
+        }
+
+        $this->data['success'] = true;
+
         return $this->toArray();
     }
 
     /**
      * Head Request Handler
-     * 
+     *
      * This method is called when a request is a HEAD
-     * 
+     *
      * @return array
      */
     public function executeHead()
@@ -142,7 +164,7 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         if ($valid instanceof Frapi_Error) {
             return $valid;
         }
-        
+
         return $this->toArray();
     }
 
