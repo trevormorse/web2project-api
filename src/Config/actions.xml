@@ -78,7 +78,7 @@
    <enabled>1</enabled>
    <public>1</public>
    <description>Handles requests for tasks.</description>
-   <route>/task/:id</route>
+   <route>/task/:task_id</route>
    <hash>92605ec4bd981e9953d12d13250367036845b2c6</hash>
    <parameters>
     <parameter>
