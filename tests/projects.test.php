@@ -82,7 +82,7 @@ class Projects_Test extends Test_Base {
     public function tearDown()
     {
         parent::tearDown();
-        parent::makeRequest('projects/' . $this->project_id, array(), 'DELETE');
+        parent::makeRequest('project',  array($this->project_id), 'DELETE');
 
         unset($this->post_data, $this->project_id);
     }
