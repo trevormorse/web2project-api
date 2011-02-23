@@ -128,6 +128,25 @@ class Test_Base extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that the value passed is numeric or an empty string
+     *
+     * @access protected
+     *
+     * @param mixed  value to check
+     * @param string message to return if if doesn't match
+     *
+     * @return
+     */
+    protected function isNumericOrEmptyString($value, $message=null)
+    {
+        if (strlen($value)) {
+            return $this->assertTrue(is_numeric($value), $message);
+        }
+
+        return;
+    }
+
+    /**
      * Tests that the value passed matches the regular expression or is blank
      *
      * @access protected
