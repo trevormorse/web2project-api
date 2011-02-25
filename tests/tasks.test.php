@@ -186,4 +186,136 @@ class Tasks_Test extends Test_Base {
         }
 
     }
+
+    /**
+     * Testing a get with invalid login
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testGetNoIdInvalidLoginJSON()
+    {
+        $result     = parent::makeRequest('task', array(), 'GET', null, array('username' => '', 'password' => ''));
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+        $this->assertEquals('Invalid Username or Password.',    $body->errors[0]->message);
+        $this->assertEquals('INVALID_LOGIN',                    $body->errors[0]->name);
+        $this->assertEquals('',                                 $body->errors[0]->at);
+    }
+
+    /**
+     * Test putting a project
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPutJSON()
+    {
+        $result     = parent::makeRequest('task', array(), 'PUT',  $this->post_data);
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(201,                                $result->getStatus());
+        $this->assertEquals('Created',                          $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+
+        $task = $body->task;
+
+        $this->assertTrue(is_numeric($task->task_id));
+        $this->assertEquals(31,                                                        count(get_object_vars($task)));
+        $this->assertEquals('*API* Task Name',                                         $task->task_name);
+        $this->assertEquals(0,                                                         $task->task_parent);
+        $this->assertEquals(0,                                                         $task->task_milestone);
+        $this->assertEquals(1,                                                         $task->task_project);
+        $this->assertEquals(1,                                                         $task->task_owner);
+        $this->assertEquals('2011-02-22 16:00:00',                                     $task->task_start_date);
+        $this->assertEquals(3,                                                         $task->task_duration);
+        $this->assertEquals(24,                                                        $task->task_duration_type);
+        $this->assertEquals('',                                                        $task->task_hours_worked);
+        $this->assertEquals('2011-02-25 16:00:00',                                     $task->task_end_date);
+        $this->assertEquals(0,                                                         $task->task_status);
+        $this->assertEquals(1,                                                         $task->task_priority);
+        $this->assertEquals(50,                                                        $task->task_percent_complete);
+        $this->assertEquals('*API* Task Description',                                  $task->task_description);
+        $this->assertEquals(500,                                                       $task->task_target_budget);
+        $this->assertEquals('http://api.example.org',                                  $task->task_related_url);
+        $this->assertEquals(1,                                                         $task->task_creator);
+        $this->assertEquals('',                                                        $task->task_order);
+        $this->assertEquals('',                                                        $task->task_client_publish);
+        $this->assertEquals(0,                                                         $task->task_dynamic);
+        $this->assertEquals(1,                                                         $task->task_access);
+        $this->assertEquals(0,                                                         $task->task_notify);
+        $this->assertEquals('',                                                        $task->task_departments);
+        $this->assertEquals('',                                                        $task->task_contacts);
+        $this->assertEquals('',                                                        $task->task_custom);
+        $this->assertEquals(1,                                                         $task->task_type);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/', $task->task_created);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/', $task->task_updated);
+        $this->assertGreaterThanOrEqual(time() - 10,                                   strtotime($task->task_created));
+        $this->assertGreaterThanOrEqual(time() - 10,                                   strtotime($task->task_updated));
+        $this->assertEquals('',                                                        $task->task_updator);
+        $this->assertEquals(0,                                                         $task->task_allow_other_user_tasklogs);
+        $this->assertTrue($body->success);
+
+        // Clean up after ourselves
+        parent::makeRequest('task', array('task_id' => $task->task_id), 'DELETE');
+    }
+
+    /**
+     * Testing a put with invalid login
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPutInvalidLoginJSON()
+    {
+        $result     = parent::makeRequest('task', array(), 'PUT', null, array('username' => '', 'password' => ''));
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+        $this->assertEquals('Invalid Username or Password.',    $body->errors[0]->message);
+        $this->assertEquals('INVALID_LOGIN',                    $body->errors[0]->name);
+        $this->assertEquals('',                                 $body->errors[0]->at);
+    }
+
+    /**
+     * Testing a put with missing parameters
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPutIvalidParamsJSON()
+    {
+        unset(
+            $this->post_data['task_priority'], $this->post_data['task_name'],
+            $this->post_data['task_project'], $this->post_data['task_start_date'],
+            $this->post_data['task_end_date']
+        );
+
+        $result     = parent::makeRequest('task', array(), 'PUT',  $this->post_data);
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+
+        $this->assertEquals(
+            'CTask::store-check failed - task name is NULL. CTask::store-check failed - task project is not set. CTask::store-check failed - task start date is NULL. CTask::store-check failed - task end date is NULL. ',
+            $body->errors[0]->message
+        );
+        $this->assertEquals('SAVE_ERROR',   $body->errors[0]->name);
+        $this->assertEquals('',             $body->errors[0]->at);
+    }
 }
