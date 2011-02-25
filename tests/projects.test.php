@@ -277,10 +277,12 @@ class Projects_Test extends Test_Base {
         $this->assertEquals('*API* Some Location',                                      $project->project_location);
         $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  $project->project_updated);
         $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  $project->project_created);
+        $this->assertGreaterThanOrEqual(time() - 10,                                    strtotime($project->project_updated));
+        $this->assertGreaterThanOrEqual(time() - 10,                                    strtotime($project->project_created));
         $this->assertTrue($body->success);
 
         // Clean up after ourselves
-        parent::makeRequest('projects/' . $project->project_id, array(), 'DELETE');
+        parent::makeRequest('project', array('project_id' => $project->project_id), 'DELETE');
     }
 
     /**
