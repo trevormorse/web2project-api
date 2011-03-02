@@ -75,6 +75,56 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
             return $valid;
         }
 
+        $username = $this->getParam('username');
+        $password = $this->getParam('password');
+        $task_id = $this->getParam('task_id', self::TYPE_INT);
+
+        // Attempt to login as user, a little bit of a hack as we currently
+        // require the $_POST['login'] var to be set as well as a global AppUI
+        $AppUI              = new CAppUI();
+        $GLOBALS['AppUI']   = $AppUI;
+        $_POST['login']     = 'login';
+
+        if (!$AppUI->login($username, $password)) {
+            throw new Frapi_Error('INVALID_LOGIN');
+        }
+
+        $task = new CTask();
+        $allowed_tasks = $task->getAllowedRecords($AppUI->user_id);
+
+        // Task ID  is the key, so lets get them in to an array so we can
+        // easily check
+        $allowed_tasks = array_keys($allowed_tasks);
+
+        if (!in_array($task_id, $allowed_tasks)) {
+            throw new Frapi_Error('PERMISSION_ERROR');
+        }
+
+        // User has permission so load the project for display
+        $task_departments = $task->getTaskDepartments($AppUI, $task_id);
+        $task_contacts    = $task->getTaskContacts($AppUI, $task_id);
+        $task             = (array)$task->load($task_id);
+
+        $task['task_departments'] = array();
+        foreach ($task_departments as $key => $value) {
+            $task['task_departments'][] = $value['dept_id'];
+        }
+
+        $task['task_contacts'] = array();
+        foreach ($task_contacts as $key => $value) {
+            $task['task_contacts'][] = $value['contact_id'];
+        }
+
+        // Remove the data that is not for display
+        unset(
+            $task['_tbl_prefix'], $task['_tbl'], $task['_tbl_key'],
+            $task['_error'], $task['_query'], $task['_tbl_module']
+        );
+
+        $this->data['task'] = $task;
+        $this->data['success'] = true;
+
+        $this->setTemplateFileName('Task');
         return $this->toArray();
     }
 

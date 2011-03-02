@@ -64,7 +64,6 @@ class Tasks_Test extends Test_Base {
             'task_project'                   => 1,
             'task_priority'                  => 1,
             'task_notify'                    => 0,
-
         );
 
         $result        = parent::makeRequest('task', array(), 'PUT',  $this->post_data);
