@@ -95,14 +95,18 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         // User has permission so load the project for display
         $project             = (array)$project->load($project_id);
-        $pd                  = CProject::getDepartments($AppUI, $project_id);
-        $project_departments = array();
+        $project_departments = CProject::getDepartments($AppUI, $project_id);
+        $project_contacts    = CProject::getContacts($AppUI, $project_id);
 
-        foreach ($pd as $key => $value) {
-            $project_departments[] = $value['dept_id'];
+        $project['project_departments'] = array();
+        foreach ($project_departments as $key => $value) {
+            $project['project_departments'][] = $value['dept_id'];
         }
 
-        $project['project_departments'] = $project_departments;
+        $project['project_contacts'] = array();
+        foreach ($project_contacts as $key => $value) {
+            $project['project_contacts'][] = $value['contact_id'];
+        }
 
         // Remove the data that is not for display
         unset(
@@ -169,6 +173,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             'project_status'            => $this->getParam('project_status'),
             'project_description'       => $this->getParam('project_description'),
             'project_departments'       => $this->getParam('project_departments', self::TYPE_ARRAY),
+            'project_contacts'          => implode(',', $this->getParam('project_contacts', self::TYPE_ARRAY)),
             'project_active'            => $this->getParam('project_active'),
         );
 
@@ -191,7 +196,13 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             }
         }
 
-        $project = (array)$project;
+        $project          = (array)$project;
+        $project_contacts = CProject::getContacts($AppUI, $project_id);
+
+        $project['project_contacts'] = array();
+        foreach ($project_contacts as $key => $value) {
+            $project['project_contacts'][] = $value['contact_id'];
+        }
 
         // Remove the data that is not for display
         unset(

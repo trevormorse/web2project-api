@@ -491,7 +491,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals(1,                                  $project->project_active);
         $this->assertEquals(0,                                  $project->project_private);
         $this->assertEquals(array(1),                           $project->project_departments);
-        $this->assertEquals(1,                                  $project->project_contacts);
+        $this->assertEquals(array(1),                           $project->project_contacts);
         $this->assertEquals(1,                                  $project->project_priority);
         $this->assertEquals(1,                                  $project->project_type);
         $this->assertEquals($this->project_id,                  $project->project_parent);
@@ -544,7 +544,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals(1,                                  (string)$project->project_active);
         $this->assertEquals(0,                                  (string)$project->project_private);
         $this->assertEquals(array('project_department' => 1),   (array)$project->project_departments);
-        $this->assertEquals(1,                                  (string)$project->project_contacts);
+        $this->assertEquals(array('project_contact' => 1),      (array)$project->project_contacts);
         $this->assertEquals(1,                                  (string)$project->project_priority);
         $this->assertEquals(1,                                  (string)$project->project_type);
         $this->assertEquals($this->project_id,                  (string)$project->project_parent);
@@ -661,7 +661,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals('',                                                                 $project->project_task_count);
         $this->assertEquals(1,                                                                  $project->project_creator);
         $this->assertEquals(0,                                                                  $project->project_active);
-        $this->assertEquals(2,                                                                  $project->project_contacts);
+        $this->assertEquals(array(2),                                                           $project->project_contacts);
         $this->assertEquals(0,                                                                  $project->project_priority);
         $this->assertEquals(2,                                                                  $project->project_type);
         $this->assertEquals(1,                                                                  $project->project_parent);
@@ -736,7 +736,7 @@ class Projects_Test extends Test_Base {
         $this->assertEquals('',                                                                 (string)$project->project_task_count);
         $this->assertEquals(1,                                                                  (string)$project->project_creator);
         $this->assertEquals(0,                                                                  (string)$project->project_active);
-        $this->assertEquals(2,                                                                  (string)$project->project_contacts);
+        $this->assertEquals(array('project_contact' => 2),                                      (array)$project->project_contacts);
         $this->assertEquals(0,                                                                  (string)$project->project_priority);
         $this->assertEquals(2,                                                                  (string)$project->project_type);
         $this->assertEquals(1,                                                                  (string)$project->project_parent);
