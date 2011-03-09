@@ -7,6 +7,12 @@
                     <project_department><?php echo $department_id; ?></project_department>
                 <?php endforeach; ?>
                 </<?php echo $key; ?>>
+            <?php elseif ($key == 'project_contacts'): ?>
+                <<?php echo $key; ?>>
+                <?php foreach ($value as $contact_id): ?>
+                    <project_contact><?php echo $department_id; ?></project_contact>
+                <?php endforeach; ?>
+                </<?php echo $key; ?>>
             <?php else: ?>
                 <<?php echo $key; ?>><?php echo $value; ?></<?php echo $key; ?>>
             <?php endif; ?>

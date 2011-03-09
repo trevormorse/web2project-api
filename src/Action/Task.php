@@ -101,9 +101,10 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         }
 
         // User has permission so load the project for display
+        $task->load($task_id);
         $task_departments = $task->getTaskDepartments($AppUI, $task_id);
         $task_contacts    = $task->getTaskContacts($AppUI, $task_id);
-        $task             = (array)$task->load($task_id);
+        $task             = get_object_vars($task);
 
         $task['task_departments'] = array();
         foreach ($task_departments as $key => $value) {
@@ -114,12 +115,6 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         foreach ($task_contacts as $key => $value) {
             $task['task_contacts'][] = $value['contact_id'];
         }
-
-        // Remove the data that is not for display
-        unset(
-            $task['_tbl_prefix'], $task['_tbl'], $task['_tbl_key'],
-            $task['_error'], $task['_query'], $task['_tbl_module']
-        );
 
         $this->data['task'] = $task;
         $this->data['success'] = true;
@@ -359,15 +354,9 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
                 $task->pushDependencies($task->task_id, $task->task_end_date);
         }
 
-        //$task = (array)$task;
         $task->load($task_id);
 
-        unset(
-            $task->_query, $task->_error, $task->_tbl_prefix,
-            $task->_tbl, $task->_tbl_key, $task->_tbl_module
-        );
-
-        $this->data['task'] = $task;
+        $this->data['task'] = get_object_vars($task);
         $this->data['success'] = true;
 
         return $this->toArray();

@@ -93,13 +93,8 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
         $return_tasks = array();
 
         foreach ($tasks as $task_id => $task_name) {
-            $temp_task = new CTask();
-            $temp_task->loadFull($AppUI, $task_id);
-            unset(
-                $temp_task->_query, $temp_task->_error, $temp_task->_tbl_prefix,
-                $temp_task->_tbl, $temp_task->_tbl_key, $temp_task->_tbl_module
-            );
-            $return_tasks[$task_id] = (array)$temp_task;
+            $task->loadFull($AppUI, $task_id);
+            $return_tasks[$task_id] = get_object_vars($task);
         }
         $this->data['tasks']  = $return_tasks;
         $this->data['success'] = true;
@@ -355,13 +350,7 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
                 $task->pushDependencies($task->task_id, $task->task_end_date);
         }
 
-        unset(
-            $task->_query, $task->_error, $task->_tbl_prefix,
-            $task->_tbl, $task->_tbl_key, $task->_tbl_module
-        );
-        $task = (array)$task;
-
-        $this->data['task'] = $task;
+        $this->data['task'] = get_object_vars($task);
         $this->data['success'] = true;
 
         return new Frapi_Response(array(

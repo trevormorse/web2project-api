@@ -251,7 +251,7 @@ class Tasks_Test extends Test_Base {
         $this->assertEquals(1,                                                         $task->task_access);
         $this->assertEquals(0,                                                         $task->task_notify);
         $this->assertEquals('',                                                        $task->task_departments);
-        $this->assertEquals('',                                                        $task->task_contacts);
+        $this->assertEquals(array(0 => ''),                                            $task->task_contacts);
         $this->assertEquals('',                                                        $task->task_custom);
         $this->assertEquals(1,                                                         $task->task_type);
         $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/', $task->task_created);
@@ -386,7 +386,7 @@ class Tasks_Test extends Test_Base {
         $this->assertEquals(2,                                                         $task->task_access);
         $this->assertEquals(0,                                                         $task->task_notify);
         $this->assertEquals(1,                                                         $task->task_departments);
-        $this->assertEquals('',                                                        $task->task_contacts);
+        $this->assertEquals(array(0 => ''),                                            $task->task_contacts);
         $this->assertEquals('',                                                        $task->task_custom);
         $this->assertEquals(1,                                                         $task->task_type);
         $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/', $task->task_created);

@@ -142,7 +142,7 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
         $post_data = array(
             'project_id'                =>  0,
             'project_creator'           => $AppUI->user_id,
-            'project_contacts'          => $this->getParam('project_contacts'),
+            'project_contacts'          => $this->getParam('project_contacts', self::TYPE_ARRAY),
             'project_name'              => $this->getParam('project_name'),
             'project_parent'            => $this->getParam('project_parent'),
             'project_owner'             => $this->getParam('project_owner'),
@@ -178,7 +178,7 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
             throw new Frapi_Error('SAVE_ERROR', $error_message);
         }
 
-        $project             = (array)$project;
+        $project             = get_object_vars($project);
         $pd                  = CProject::getDepartments($AppUI, $project['project_id']);
         $project_departments = array();
 
@@ -187,11 +187,6 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
         }
 
         $project['project_departments'] = $project_departments;
-        // Remove the data that is not for display
-        unset(
-            $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
-            $project['_error'], $project['_query'], $project['_tbl_module']
-        );
 
         $this->data['project'] = $project;
         $this->data['success'] = true;

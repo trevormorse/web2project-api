@@ -94,9 +94,10 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         }
 
         // User has permission so load the project for display
-        $project             = (array)$project->load($project_id);
+        $project->load($project_id);
         $project_departments = CProject::getDepartments($AppUI, $project_id);
         $project_contacts    = CProject::getContacts($AppUI, $project_id);
+        $project             = get_object_vars($project);
 
         $project['project_departments'] = array();
         foreach ($project_departments as $key => $value) {
@@ -107,12 +108,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
         foreach ($project_contacts as $key => $value) {
             $project['project_contacts'][] = $value['contact_id'];
         }
-
-        // Remove the data that is not for display
-        unset(
-            $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
-            $project['_error'], $project['_query'], $project['_tbl_module']
-        );
 
         $this->data['project'] = $project;
         $this->data['success'] = true;
@@ -173,7 +168,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             'project_status'            => $this->getParam('project_status'),
             'project_description'       => $this->getParam('project_description'),
             'project_departments'       => $this->getParam('project_departments', self::TYPE_ARRAY),
-            'project_contacts'          => implode(',', $this->getParam('project_contacts', self::TYPE_ARRAY)),
+            'project_contacts'          => $this->getParam('project_contacts', self::TYPE_ARRAY),
             'project_active'            => $this->getParam('project_active'),
         );
 
@@ -196,19 +191,14 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             }
         }
 
-        $project          = (array)$project;
+        $project->load($project_id);
+        $project          = get_object_vars($project);
         $project_contacts = CProject::getContacts($AppUI, $project_id);
 
         $project['project_contacts'] = array();
         foreach ($project_contacts as $key => $value) {
             $project['project_contacts'][] = $value['contact_id'];
         }
-
-        // Remove the data that is not for display
-        unset(
-            $project['_tbl_prefix'], $project['_tbl'], $project['_tbl_key'],
-            $project['_error'], $project['_query'], $project['_tbl_module']
-        );
 
         $this->data['project'] = $project;
         $this->data['success'] = true;
