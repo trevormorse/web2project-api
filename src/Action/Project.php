@@ -82,15 +82,19 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
             throw new Frapi_Error('INVALID_LOGIN');
         }
 
-        $project = new CProject();
-        $allowed_projects = $project->getAllowedProjects($AppUI->user_id);
+        // check permissions for this record
+        $perms = &$AppUI->acl();
+        $canRead = $perms->checkModuleItem('projects', 'view', $project_id);
 
-        // Project ID  is the key, so lets get them in to an array so we can
-        // easily check
-        $allowed_projects = array_keys($allowed_projects);
-
-        if (!in_array($project_id, $allowed_projects)) {
+        if (!$canRead) {
             throw new Frapi_Error('PERMISSION_ERROR');
+        }
+
+        $project = new CProject();
+        $denied = $project->getDeniedRecords($AppUI->user_id);
+
+        if (in_array($project_id, $denied)) {
+            throw new Frapi_Error('PERMISSION_DENIED');
         }
 
         // User has permission so load the project for display
