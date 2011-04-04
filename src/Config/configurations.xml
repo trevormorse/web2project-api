@@ -25,5 +25,15 @@
    <key>cache</key>
    <value>apc</value>
   </configuration>
+  <configuration>
+   <key>use_cdata</key>
+   <value>1</value>
+   <hash>ca12dcbcb63d0084d6c88262b5d108d979a98581</hash>
+  </configuration>
+  <configuration>
+   <key>allow_cross_domain</key>
+   <value>0</value>
+   <hash>d6d1e0ee4c22e2a09f1f1d56306608020b69a452</hash>
+  </configuration>
  </configurations>
 </frapi-config>

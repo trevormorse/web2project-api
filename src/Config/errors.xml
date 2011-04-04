@@ -24,5 +24,12 @@
 The message will contain all the internal web2project validation messages.</description>
    <hash>77e7b61db9b70431b9276d3207c15a859f8fcc78</hash>
   </error>
+  <error>
+   <name>METHOD_NOT_ALLOWED</name>
+   <message>Method Not Allowed</message>
+   <http_code>405</http_code>
+   <description></description>
+   <hash>67557311f94eaca64147103813e6d2c30d0567b1</hash>
+  </error>
  </errors>
 </frapi-config>

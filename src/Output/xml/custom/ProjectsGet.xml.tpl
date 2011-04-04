@@ -9,6 +9,7 @@
             <project_start_date><?php echo $project['project_start_date']; ?></project_start_date>
             <project_end_date><?php echo $project['project_end_date']; ?></project_end_date>
             <project_company><?php echo $project['project_company']; ?></project_company>
+            <project_uri><?php echo $project['project_uri']; ?></project_uri>
         </project>
         <?php endforeach; ?>
         <?php endif; ?>

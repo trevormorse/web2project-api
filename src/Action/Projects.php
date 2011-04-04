@@ -51,12 +51,7 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeAction()
     {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
+        throw new Frapi_Error('METHOD_NOT_ALLOWED');
     }
 
     /**
@@ -86,8 +81,20 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
             throw new Frapi_Error('INVALID_LOGIN');
         }
 
-        $project = new CProject();
-        $this->data['projects'] = $project->getAllowedProjects($AppUI->user_id);
+        $project        = new CProject();
+        $projects       = $project->getAllowedProjects($AppUI->user_id);
+        $final_projects = array();
+        $cache          = new Frapi_Internal();
+        $cache          = $cache->getCachedDbConfig();
+
+        foreach( $projects as $key =>$project) {
+            unset($projects[$key][0], $projects[$key][1], $projects[$key][2], $projects[$key][3], $projects[$key][4], $projects[$key][5], $projects[$key][6]);
+
+            $projects[$key]['project_uri'] = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
+            $projects[$key]['project_uri'] .= $cache['api_url'] . '/project/' . $project['project_id'];
+        }
+
+        $this->data['projects'] = $projects;
         $this->data['success']  = true;
 
         $this->setTemplateFileName('ProjectsGet');
@@ -103,23 +110,6 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
      * @return array
      */
     public function executePost()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-    /**
-     * Put Request Handler
-     *
-     * This method is called when a request is a PUT
-     *
-     * @return array
-     */
-    public function executePut()
     {
         $valid = $this->hasRequiredParameters($this->requiredParams);
         if ($valid instanceof Frapi_Error) {
@@ -191,46 +181,17 @@ class Action_Projects extends Frapi_Action implements Frapi_Action_Interface
         $this->data['project'] = $project;
         $this->data['success'] = true;
 
+        $cache                                = new Frapi_Internal();
+        $cache                                = $cache->getCachedDbConfig();
+        $project_uri                          = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
+        $project_uri                         .= $cache['api_url'] . '/project/' . $project['project_id'];
+        $this->data['project']['project_uri'] = $project_uri;
+
         return new Frapi_Response(array(
-            'code' => 201,
-            'data' => $this->data
+            'code'    => 201,
+            'data'    => $this->data,
+            'headers' => array('location' => $project_uri),
         ));
     }
-
-    /**
-     * Delete Request Handler
-     *
-     * This method is called when a request is a DELETE
-     *
-     * @return array
-     */
-    public function executeDelete()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-    /**
-     * Head Request Handler
-     *
-     * This method is called when a request is a HEAD
-     *
-     * @return array
-     */
-    public function executeHead()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-
 }
 
