@@ -51,7 +51,7 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeAction()
     {
-        return $this->toArray();
+        throw new Frapi_Error('METHOD_NOT_ALLOWED');
     }
 
     /**
@@ -122,13 +122,13 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
     }
 
     /**
-     * Post Request Handler
+     * Put Request Handler
      *
-     * This method is called when a request is a POST
+     * This method is called when a request is a PUT
      *
      * @return array
      */
-    public function executePost()
+    public function executePut()
     {
         $valid = $this->hasRequiredParameters($this->requiredParams);
         if ($valid instanceof Frapi_Error) {
@@ -213,23 +213,6 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
     }
 
     /**
-     * Put Request Handler
-     *
-     * This method is called when a request is a PUT
-     *
-     * @return array
-     */
-    public function executePut()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-    /**
      * Delete Request Handler
      *
      * This method is called when a request is a DELETE
@@ -267,19 +250,5 @@ class Action_Project extends Frapi_Action implements Frapi_Action_Interface
 
         return $this->toArray();
     }
-
-    /**
-     * Head Request Handler
-     *
-     * This method is called when a request is a HEAD
-     *
-     * @return array
-     */
-    public function executeHead()
-    {
-        return $this->toArray();
-    }
-
-
 }
 

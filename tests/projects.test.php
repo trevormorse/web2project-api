@@ -223,7 +223,7 @@ class Projects_Test extends Test_Base {
      *
      * @return void
      */
-    public function testPutJSON()
+    public function testPutNoIdJSON()
     {
         $result     = parent::makeRequest('project', array(), 'PUT',  $this->post_data);
         $headers    = $result->getHeader();
@@ -244,7 +244,7 @@ class Projects_Test extends Test_Base {
      *
      * @return void
      */
-    public function testPutXML()
+    public function testPutNoIdXML()
     {
         $result     = parent::makeRequest('project', array(), 'PUT',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
@@ -407,13 +407,13 @@ class Projects_Test extends Test_Base {
     }
 
     /**
-     *  Testing a post
+     *  Testing a put
      *
      * @access public
      *
      * @return void
      */
-    public function testPostJSON()
+    public function testPutJSON()
     {
         $this->post_data = array(
             'project_id'                => $this->project_id,
@@ -440,7 +440,7 @@ class Projects_Test extends Test_Base {
             'project_creator'           => 1
         );
 
-        $result     = parent::makeRequest('project', array($this->project_id), 'POST', $this->post_data);
+        $result     = parent::makeRequest('project', array($this->project_id), 'PUT', $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -481,13 +481,13 @@ class Projects_Test extends Test_Base {
     }
 
     /**
-     *  Testing a post
+     *  Testing a put
      *
      * @access public
      *
      * @return void
      */
-    public function testPostXML()
+    public function testPutXML()
     {
         $this->post_data = array(
             'project_id'                => $this->project_id,
@@ -514,7 +514,7 @@ class Projects_Test extends Test_Base {
             'project_creator'           => 1,
         );
 
-        $result     = parent::makeRequest('project', array($this->project_id), 'POST', $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'PUT', $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -556,15 +556,15 @@ class Projects_Test extends Test_Base {
     }
 
     /**
-     * Testing a post with invalid login
+     * Testing a put with invalid login
      *
      * @access public
      *
      * @return void
      */
-    public function testPostInvalidLoginJSON()
+    public function testPutInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('project', array($this->project_id), 'POST', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('project', array($this->project_id), 'PUT', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -577,15 +577,15 @@ class Projects_Test extends Test_Base {
     }
 
     /**
-     * Testing a post with invalid login
+     * Testing a put with invalid login
      *
      * @access public
      *
      * @return void
      */
-    public function testPostInvalidLoginXML()
+    public function testPutInvalidLoginXML()
     {
-        $result     = parent::makeRequest('project', array($this->project_id), 'POST', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'PUT', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 
@@ -598,13 +598,13 @@ class Projects_Test extends Test_Base {
     }
 
     /**
-     * Testing a post with missing parameters
+     * Testing a PUT with missing parameters
      *
      * @access public
      *
      * @return void
      */
-    public function testPostIvalidParamsJSON()
+    public function testPutInvalidParamsJSON()
     {
         unset(
             $this->post_data['project_name'], $this->post_data['project_short_name'],
@@ -613,7 +613,7 @@ class Projects_Test extends Test_Base {
             $this->post_data['project_status']
         );
 
-        $result     = parent::makeRequest('project', array($this->project_id), 'POST',  $this->post_data);
+        $result     = parent::makeRequest('project', array($this->project_id), 'PUT',  $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -630,13 +630,13 @@ class Projects_Test extends Test_Base {
     }
 
     /**
-     * Testing a post with missing parameters
+     * Testing a put with missing parameters
      *
      * @access public
      *
      * @return void
      */
-    public function testPostIvalidParamsXML()
+    public function testPutInvalidParamsXML()
     {
         unset(
             $this->post_data['project_name'], $this->post_data['project_short_name'],
@@ -645,7 +645,7 @@ class Projects_Test extends Test_Base {
             $this->post_data['project_status']
         );
 
-        $result     = parent::makeRequest('project', array($this->project_id), 'POST',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $result     = parent::makeRequest('project', array($this->project_id), 'PUT',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
         $headers    = $result->getHeader();
         $body       = simplexml_load_string($result->getBody())->errors->error;
 
@@ -740,6 +740,232 @@ class Projects_Test extends Test_Base {
         $this->assertEquals('Invalid Username or Password.',    (string)$body->message);
         $this->assertEquals('INVALID_LOGIN',                    (string)$body->name);
         $this->assertEquals('',                                 (string)$body->at);
+    }
+
+
+    /**
+     * Test posting a project
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPostJSON()
+    {
+        $result     = parent::makeRequest('project', array(), 'POST',  $this->post_data);
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(201,                                $result->getStatus());
+        $this->assertEquals('Created',                          $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+
+        $project = $body->project;
+
+        $this->assertTrue(is_numeric($project->project_id));
+        $this->assertEquals('http://w2p.api.frapi/project/' . $project->project_id,     $headers['location']);
+        $this->assertEquals(33,                                                         count(get_object_vars($project)));
+        $this->assertEquals(1,                                                          $project->project_company);
+        $this->assertEquals(array(1),                                                   $project->project_departments);
+        $this->assertEquals('*API* Project Name',                                       $project->project_name);
+        $this->assertEquals('*API*',                                                    $project->project_short_name);
+        $this->assertEquals(1,                                                          $project->project_owner);
+        $this->assertEquals('http://api.example.org',                                   $project->project_url);
+        $this->assertEquals('http://demo.api.example.org',                              $project->project_demo_url);
+        $this->assertEquals('2010-07-10 00:00:00',                                      $project->project_start_date);
+        $this->assertEquals('2010-07-11 23:59:59',                                      $project->project_end_date);
+        $this->assertEquals('',                                                         $project->project_actual_end_date);
+        $this->assertEquals(1,                                                          $project->project_status);
+        $this->assertEquals('',                                                         $project->project_percent_complete);
+        $this->assertEquals('AAAAAA',                                                   $project->project_color_identifier);
+        $this->assertEquals('*API* long project description.',                          $project->project_description);
+        $this->assertEquals(15400.37,                                                   $project->project_target_budget);
+        $this->assertEquals(14000,                                                      $project->project_actual_budget);
+        $this->assertEquals('',                                                         $project->project_scheduled_hours);
+        $this->assertEquals('',                                                         $project->project_worked_hours);
+        $this->assertEquals('',                                                         $project->project_task_count);
+        $this->assertEquals(1,                                                          $project->project_creator);
+        $this->assertEquals(1,                                                          $project->project_active);
+        $this->assertEquals(0,                                                          $project->project_private);
+        $this->assertEquals(array(1),                                                   $project->project_departments);
+        $this->assertEquals(array(1),                                                   $project->project_contacts);
+        $this->assertEquals(1,                                                          $project->project_priority);
+        $this->assertEquals(1,                                                          $project->project_type);
+        $this->assertEquals($project->project_id,                                       $project->project_parent);
+        $this->assertEquals($project->project_id,                                       $project->project_original_parent);
+        $this->assertEquals('*API* Some Location',                                      $project->project_location);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  $project->project_updated);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  $project->project_created);
+        $this->assertGreaterThanOrEqual(time() - 10,                                    strtotime($project->project_updated));
+        $this->assertGreaterThanOrEqual(time() - 10,                                    strtotime($project->project_created));
+        $this->assertTrue($body->success);
+
+        // Clean up after ourselves
+        parent::makeRequest('project', array('project_id' => $project->project_id), 'DELETE');
+    }
+
+    /**
+     * Test posting a project
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPostXML()
+    {
+        $result     = parent::makeRequest('project', array(), 'POST',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $headers    = $result->getHeader();
+        $body       = $result->getBody();
+
+        $this->assertEquals(201,                                $result->getStatus());
+        $this->assertEquals('Created',                          $result->getReasonPhrase());
+        $this->assertEquals('application/xml; charset=utf-8',   $headers['content-type']);
+
+        $project = simplexml_load_string($body)->project;
+
+        $this->assertTrue(is_numeric((string)$project->project_id));
+        $this->assertEquals('http://w2p.api.frapi/project/' . $project->project_id,     $headers['location']);
+        $this->assertEquals(33,                                                         count(get_object_vars($project)));
+        $this->assertEquals(1,                                                          (string)$project->project_company);
+        $this->assertEquals(array('project_department' => 1),                           (array)$project->project_departments);
+        $this->assertEquals('*API* Project Name',                                       (string)$project->project_name);
+        $this->assertEquals('*API*',                                                    (string)$project->project_short_name);
+        $this->assertEquals(1,                                                          (string)$project->project_owner);
+        $this->assertEquals('http://api.example.org',                                   (string)$project->project_url);
+        $this->assertEquals('http://demo.api.example.org',                              (string)$project->project_demo_url);
+        $this->assertEquals('2010-07-10 00:00:00',                                      (string)$project->project_start_date);
+        $this->assertEquals('2010-07-11 23:59:59',                                      (string)$project->project_end_date);
+        $this->assertEquals('',                                                         (string)$project->project_actual_end_date);
+        $this->assertEquals(1,                                                          (string)$project->project_status);
+        $this->assertEquals('',                                                         (string)$project->project_percent_complete);
+        $this->assertEquals('AAAAAA',                                                   (string)$project->project_color_identifier);
+        $this->assertEquals('*API* long project description.',                          (string)$project->project_description);
+        $this->assertEquals(15400.37,                                                   (string)$project->project_target_budget);
+        $this->assertEquals(14000,                                                      (string)$project->project_actual_budget);
+        $this->assertEquals('',                                                         (string)$project->project_scheduled_hours);
+        $this->assertEquals('',                                                         (string)$project->project_worked_hours);
+        $this->assertEquals('',                                                         (string)$project->project_task_count);
+        $this->assertEquals(1,                                                          (string)$project->project_creator);
+        $this->assertEquals(1,                                                          (string)$project->project_active);
+        $this->assertEquals(0,                                                          (string)$project->project_private);
+        $this->assertEquals(array('project_contact' => 1),                              (array)$project->project_contacts);
+        $this->assertEquals(1,                                                          (string)$project->project_priority);
+        $this->assertEquals(1,                                                          (string)$project->project_type);
+        $this->assertEquals((string)$project->project_id,                               (string)$project->project_parent);
+        $this->assertEquals((string)$project->project_id,                               (string)$project->project_original_parent);
+        $this->assertEquals('*API* Some Location',                                      (string)$project->project_location);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  (string)$project->project_updated);
+        $this->assertRegExp('/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/',  (string)$project->project_created);
+        $this->assertEquals(1,                                                          (string)simplexml_load_string($body)->success);
+
+        // Clean up after ourselves
+        parent::makeRequest('projects/' . $project->project_id, array(), 'DELETE');
+    }
+
+    /**
+     * Testing a post with invalid login
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPostInvalidLoginJSON()
+    {
+        $result     = parent::makeRequest('project', array(), 'POST', null, array('username' => '', 'password' => ''));
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+        $this->assertEquals('Invalid Username or Password.',    $body->errors[0]->message);
+        $this->assertEquals('INVALID_LOGIN',                    $body->errors[0]->name);
+        $this->assertEquals('',                                 $body->errors[0]->at);
+    }
+
+    /*
+     * Testing a post with invalid login
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPostInvalidLoginXML()
+    {
+        $result     = parent::makeRequest('project', array(), 'POST', null, array('username' => '', 'password' => ''), 'http://w2p.api.frapi/', 'xml');
+        $headers    = $result->getHeader();
+        $body       = simplexml_load_string($result->getBody())->errors->error;
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/xml; charset=utf-8',   $headers['content-type']);
+        $this->assertEquals('Invalid Username or Password.',    (string)$body->message);
+        $this->assertEquals('INVALID_LOGIN',                    (string)$body->name);
+        $this->assertEquals('',                                 (string)$body->at);
+    }
+
+    /**
+     * Testing a post with missing parameters
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPostInvalidParamsJSON()
+    {
+        unset(
+            $this->post_data['project_name'], $this->post_data['project_short_name'],
+            $this->post_data['project_owner'], $this->post_data['project_priority'],
+            $this->post_data['project_color_identifier'], $this->post_data['project_type'],
+            $this->post_data['project_status']
+        );
+
+        $result     = parent::makeRequest('project', array(), 'POST',  $this->post_data);
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+
+        $this->assertEquals(
+            'CProject::store-check failed - project name is not set. CProject::store-check failed - project short name is not set. CProject::store-check failed - project owner is not set. CProject::store-check failed - project priority is not set. CProject::store-check failed - project color identifier is not set. CProject::store-check failed - project type is not set. CProject::store-check failed - project status is not set. ',
+            $body->errors[0]->message
+        );
+        $this->assertEquals('SAVE_ERROR',   $body->errors[0]->name);
+        $this->assertEquals('',             $body->errors[0]->at);
+    }
+
+    /**
+     * Testing a post with missing parameters
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testPostIvalidParamsXML()
+    {
+        unset(
+            $this->post_data['project_name'], $this->post_data['project_short_name'],
+            $this->post_data['project_owner'], $this->post_data['project_priority'],
+            $this->post_data['project_color_identifier'], $this->post_data['project_type'],
+            $this->post_data['project_status']
+        );
+
+        $result     = parent::makeRequest('project', array(), 'POST',  $this->post_data, null, 'http://w2p.api.frapi/', 'xml');
+        $headers    = $result->getHeader();
+        $body       = simplexml_load_string($result->getBody())->errors->error;
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/xml; charset=utf-8',   $headers['content-type']);
+
+        $this->assertEquals(
+            'CProject::store-check failed - project name is not set. CProject::store-check failed - project short name is not set. CProject::store-check failed - project owner is not set. CProject::store-check failed - project priority is not set. CProject::store-check failed - project color identifier is not set. CProject::store-check failed - project type is not set. CProject::store-check failed - project status is not set. ',
+            (string)$body->message
+        );
+        $this->assertEquals('SAVE_ERROR',   (string)$body->name);
+        $this->assertEquals('',             (string)$body->at);
     }
 }
 ?>
