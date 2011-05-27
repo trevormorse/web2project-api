@@ -78,7 +78,7 @@
    <enabled>1</enabled>
    <public>1</public>
    <description>Handles requests for tasks.</description>
-   <route>/task/:task_id</route>
+   <route>/project/:project_id/task/:task_id</route>
    <hash>92605ec4bd981e9953d12d13250367036845b2c6</hash>
    <parameters>
     <parameter>
@@ -96,7 +96,7 @@
    <enabled>1</enabled>
    <public>1</public>
    <description>Lists all the tasks that the user is able to access.</description>
-   <route>/task</route>
+   <route>/project/:project_id/task</route>
    <hash>f4280b1f39aec952c80303fd6bacd8d230ca8425</hash>
    <parameters>
     <parameter>

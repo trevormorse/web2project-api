@@ -53,12 +53,7 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeAction()
     {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
+        throw new Frapi_Error('METHOD_NOT_ALLOWED');
     }
 
     /**
@@ -124,13 +119,13 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
     }
 
     /**
-     * Post Request Handler
+     * Pur Request Handler
      *
-     * This method is called when a request is a POST
+     * This method is called when a request is a PUT
      *
      * @return array
      */
-    public function executePost()
+    public function executePut()
     {
         /**
          * @todo Remove this once we figure out how to reference vars in file
@@ -153,6 +148,11 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
         $task_id         = $this->getParam('task_id');
         $adjustStartDate = $this->getParam('set_task_start_date');
         $task            = new CTask;
+        $project_id      = $this->getParam('project_id');
+
+        if (!$project_id || !is_numeric($project_id)) {
+            throw new Frapi_Error('ERROR_MISSING_REQUEST_ARG');
+        }
 
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
@@ -183,7 +183,7 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
             'task_duration_type'             => $this->getParam('task_duration_type'),
             'task_dynamic'                   => $this->getParam('task_dynamic'),
             'task_allow_other_user_tasklogs' => $this->getParam('task_allow_other_user_tasklogs'),
-            'task_project'                   => $this->getParam('task_project'),
+            'task_project'                   => $project_id,
             'task_priority'                  => $this->getParam('task_priority'),
         );
 
@@ -363,23 +363,6 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
     }
 
     /**
-     * Put Request Handler
-     *
-     * This method is called when a request is a PUT
-     *
-     * @return array
-     */
-    public function executePut()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-    /**
      * Delete Request Handler
      *
      * This method is called when a request is a DELETE
@@ -417,24 +400,5 @@ class Action_Task extends Frapi_Action implements Frapi_Action_Interface
 
         return $this->toArray();
     }
-
-    /**
-     * Head Request Handler
-     *
-     * This method is called when a request is a HEAD
-     *
-     * @return array
-     */
-    public function executeHead()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-
 }
 

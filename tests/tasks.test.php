@@ -33,6 +33,15 @@ class Tasks_Test extends Test_Base {
     private $task_id;
 
     /**
+     *
+     * id of project for dealing with tasks
+     *
+     * @var int
+     * @access private
+     */
+    private $project_id;
+
+    /**
      * Sets up for each test
      *
      * @access public
@@ -42,6 +51,33 @@ class Tasks_Test extends Test_Base {
     public function setUp()
     {
         parent::setUp();
+
+        $this->post_data = array(
+            'project_contacts'          => 1,
+            'project_name'              => '*API* Project Name',
+            'project_parent'            => 0,
+            'project_owner'             => 1,
+            'project_company'           => 1,
+            'project_location'          => '*API* Some Location',
+            'project_start_date'        => '20100710',
+            'project_end_date'          => '20100711',
+            'project_target_budget'     => 15400.37,
+            'project_actual_budget'     => 14000.00,
+            'project_url'               => 'http://api.example.org',
+            'project_demo_url'          => 'http://demo.api.example.org',
+            'project_priority'          => 1,
+            'project_short_name'        => '*API*',
+            'project_color_identifier'  => 'AAAAAA',
+            'project_type'              => 1,
+            'project_status'            => 1,
+            'project_description'       => '*API* long project description.',
+            'project_departments'       => array(1),
+            'project_active'            => 1,
+            'project_creator'           => 1,
+        );
+
+        $result             = parent::makeRequest('project', array(), 'POST',  $this->post_data);
+        $this->project_id   = array_pop(explode('/', $result->getHeader('location')));
 
         $this->post_data = array (
             'task_name'                      => '*API* Task Name',
@@ -61,13 +97,14 @@ class Tasks_Test extends Test_Base {
             'task_duration_type'             => 24,
             'task_dynamic'                   => 0,
             'task_allow_other_user_tasklogs' => 0,
-            'task_project'                   => 1,
+            'task_project'                   => $this->project_id,
             'task_priority'                  => 1,
             'task_notify'                    => 0,
         );
 
-        $result        = parent::makeRequest('task', array(), 'PUT',  $this->post_data);
+        $result        = parent::makeRequest('/project/' . $this->project_id . '/task', array(), 'POST',  $this->post_data);
         $body          = json_decode($result->getBody());
+
         $this->task_id = $body->task->task_id;
     }
 
@@ -82,6 +119,7 @@ class Tasks_Test extends Test_Base {
     {
         parent::tearDown();
         parent::makeRequest('task/' . $this->task_id, array(), 'DELETE');
+        parent::makeRequest('project/' . $this->project_id, array(), 'DELETE');
 
         unset($this->post_data, $this->project_id);
     }
@@ -95,7 +133,7 @@ class Tasks_Test extends Test_Base {
      */
     public function testGetNoIdJSON()
     {
-        $result     = parent::makeRequest('task', array());
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array());
         $headers    = $result->getHeader();
         $body       = $result->getBody();
 
@@ -183,7 +221,6 @@ class Tasks_Test extends Test_Base {
             $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $task->project_color_identifier);
             $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $task->username);
         }
-
     }
 
     /**
@@ -195,7 +232,7 @@ class Tasks_Test extends Test_Base {
      */
     public function testGetNoIdInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('task', array(), 'GET', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array(), 'GET', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -208,15 +245,15 @@ class Tasks_Test extends Test_Base {
     }
 
     /**
-     * Test putting a project
+     * Test posting a project
      *
      * @access public
      *
      * @return void
      */
-    public function testPutJSON()
+    public function testPostJSON()
     {
-        $result     = parent::makeRequest('task', array(), 'PUT',  $this->post_data);
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array(), 'POST',  $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -227,11 +264,12 @@ class Tasks_Test extends Test_Base {
         $task = $body->task;
 
         $this->assertTrue(is_numeric($task->task_id));
-        $this->assertEquals(31,                                                        count(get_object_vars($task)));
+        $this->assertEquals('http://w2p.api.frapi/project/' . $this->project_id . '/task/' . $task->task_id,     $headers['location']);
+        $this->assertEquals(32,                                                        count(get_object_vars($task)));
         $this->assertEquals('*API* Task Name',                                         $task->task_name);
         $this->assertEquals(0,                                                         $task->task_parent);
         $this->assertEquals(0,                                                         $task->task_milestone);
-        $this->assertEquals(1,                                                         $task->task_project);
+        $this->assertEquals($this->project_id,                                         $task->task_project);
         $this->assertEquals(1,                                                         $task->task_owner);
         $this->assertEquals('2011-02-22 16:00:00',                                     $task->task_start_date);
         $this->assertEquals(3,                                                         $task->task_duration);
@@ -273,9 +311,9 @@ class Tasks_Test extends Test_Base {
      *
      * @return void
      */
-    public function testPutInvalidLoginJSON()
+    public function testPostInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('task', array(), 'PUT', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array(), 'POST', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -294,7 +332,7 @@ class Tasks_Test extends Test_Base {
      *
      * @return void
      */
-    public function testPutIvalidParamsJSON()
+    public function testPostIvalidParamsJSON()
     {
         unset(
             $this->post_data['task_priority'], $this->post_data['task_name'],
@@ -302,7 +340,7 @@ class Tasks_Test extends Test_Base {
             $this->post_data['task_end_date']
         );
 
-        $result     = parent::makeRequest('task', array(), 'PUT',  $this->post_data);
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array(), 'POST',  $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -311,7 +349,7 @@ class Tasks_Test extends Test_Base {
         $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
 
         $this->assertEquals(
-            'CTask::store-check failed - task name is NULL. CTask::store-check failed - task project is not set. CTask::store-check failed - task start date is NULL. CTask::store-check failed - task end date is NULL. ',
+            'CTask::store-check failed - task name is NULL. CTask::store-check failed - task start date is NULL. CTask::store-check failed - task end date is NULL. ',
             $body->errors[0]->message
         );
         $this->assertEquals('SAVE_ERROR',   $body->errors[0]->name);
@@ -319,13 +357,13 @@ class Tasks_Test extends Test_Base {
     }
 
     /**
-     *  Testing a post
+     *  Testing a put
      *
      * @access public
      *
      * @return void
      */
-    public function testPostJSON()
+    public function testPutJSON()
     {
         $this->post_data = array (
             'task_name'                      => '*API* Task Name Updated',
@@ -352,7 +390,7 @@ class Tasks_Test extends Test_Base {
             'hperc_assign'                   => '1;100'
         );
 
-        $result     = parent::makeRequest('task', array($this->task_id), 'POST', $this->post_data);
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array($this->task_id), 'PUT', $this->post_data);
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -366,7 +404,7 @@ class Tasks_Test extends Test_Base {
         $this->assertEquals('*API* Task Name Updated',                                 $task->task_name);
         $this->assertEquals($this->task_id,                                            $task->task_parent);
         $this->assertEquals(0,                                                         $task->task_milestone);
-        $this->assertEquals(1,                                                         $task->task_project);
+        $this->assertEquals($this->project_id,                                         $task->task_project);
         $this->assertEquals(1,                                                         $task->task_owner);
         $this->assertEquals('2011-03-06 16:00:00',                                     $task->task_start_date);
         $this->assertEquals(4,                                                         $task->task_duration);
@@ -399,15 +437,15 @@ class Tasks_Test extends Test_Base {
     }
 
     /**
-     * Testing a post with invalid login
+     * Testing a put with invalid login
      *
      * @access public
      *
      * @return void
      */
-    public function testPostInvalidLoginJSON()
+    public function testPutInvalidLoginJSON()
     {
-        $result     = parent::makeRequest('task', array($this->task_id), 'POST', null, array('username' => '', 'password' => ''));
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array($this->task_id), 'PUT', null, array('username' => '', 'password' => ''));
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
 
@@ -420,19 +458,19 @@ class Tasks_Test extends Test_Base {
     }
 
     /**
-     * Testing a post with missing parameters
+     * Testing a put with missing parameters
      *
      * @access public
      *
      * @return void
      */
-    public function testPostIvalidParamsJSON()
+    public function testPutIvalidParamsJSON()
     {
         unset(
             $this->post_data['task_name'], $this->post_data['task_project']
         );
 
-        $result     = parent::makeRequest('task', array($this->task_id), 'POST',  $this->post_data);
+        $result     = parent::makeRequest('/project/' . $this->project_id . '/task', array($this->task_id), 'PUT',  $this->post_data);
 
         $headers    = $result->getHeader();
         $body       = json_decode($result->getBody());
@@ -442,7 +480,7 @@ class Tasks_Test extends Test_Base {
         $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
 
         $this->assertEquals(
-            'CTask::store-check failed - task name is NULL. CTask::store-check failed - task project is not set. ',
+            'CTask::store-check failed - task name is NULL. ',
             $body->errors[0]->message
         );
         $this->assertEquals('SAVE_ERROR',   $body->errors[0]->name);

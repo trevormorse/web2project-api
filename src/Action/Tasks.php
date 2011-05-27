@@ -53,12 +53,7 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
      */
     public function executeAction()
     {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
+        throw new Frapi_Error('METHOD_NOT_ALLOWED');
     }
 
     /**
@@ -77,6 +72,11 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
 
         $username   = $this->getParam('username');
         $password   = $this->getParam('password');
+        $project_id = $this->getParam('project_id');
+
+        if (!$project_id || !is_numeric($project_id)) {
+            throw new Frapi_Error('ERROR_MISSING_REQUEST_ARG');
+        }
 
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
@@ -94,8 +94,12 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
 
         foreach ($tasks as $task_id => $task_name) {
             $task->loadFull($AppUI, $task_id);
-            $return_tasks[$task_id] = get_object_vars($task);
+
+            if ($task->task_project == $project_id) {
+                $return_tasks[$task_id] = get_object_vars($task);
+            }
         }
+
         $this->data['tasks']  = $return_tasks;
         $this->data['success'] = true;
 
@@ -112,23 +116,6 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
      * @return array
      */
     public function executePost()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-    /**
-     * Put Request Handler
-     *
-     * This method is called when a request is a PUT
-     *
-     * @return array
-     */
-    public function executePut()
     {
         /**
          * @todo Remove this once we figure out how to reference vars in file
@@ -149,7 +136,11 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
         $comment         = $this->getParam('email_comment');
         $task_id         = $this->getParam('task_id');
         $adjustStartDate = $this->getParam('set_task_start_date');
+        $project_id      = $this->getParam('project_id');
 
+        if (!$project_id || !is_numeric($project_id)) {
+            throw new Frapi_Error('ERROR_MISSING_REQUEST_ARG');
+        }
         // Attempt to login as user, a little bit of a hack as we currently
         // require the $_POST['login'] var to be set as well as a global AppUI
         $AppUI              = new CAppUI();
@@ -179,7 +170,7 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
             'task_duration_type'             => $this->getParam('task_duration_type'),
             'task_dynamic'                   => $this->getParam('task_dynamic'),
             'task_allow_other_user_tasklogs' => $this->getParam('task_allow_other_user_tasklogs'),
-            'task_project'                   => $this->getParam('task_project'),
+            'task_project'                   => $project_id,
             'task_priority'                  => $this->getParam('task_priority'),
         );
 
@@ -353,46 +344,17 @@ class Action_Tasks extends Frapi_Action implements Frapi_Action_Interface
         $this->data['task'] = get_object_vars($task);
         $this->data['success'] = true;
 
+        $cache                          = new Frapi_Internal();
+        $cache                          = $cache->getCachedDbConfig();
+        $task_uri                       = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
+        $task_uri                      .= $cache['api_url'] . '/project/' . $this->data['task']['task_project'] . '/task/' . $this->data['task']['task_id'];
+        $this->data['task']['task_uri'] = $task_uri;
+
         return new Frapi_Response(array(
-            'code' => 201,
-            'data' => $this->data
+            'code'    => 201,
+            'data'    => $this->data,
+            'headers' => array('location' => $task_uri),
         ));
     }
-
-    /**
-     * Delete Request Handler
-     *
-     * This method is called when a request is a DELETE
-     *
-     * @return array
-     */
-    public function executeDelete()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-    /**
-     * Head Request Handler
-     *
-     * This method is called when a request is a HEAD
-     *
-     * @return array
-     */
-    public function executeHead()
-    {
-        $valid = $this->hasRequiredParameters($this->requiredParams);
-        if ($valid instanceof Frapi_Error) {
-            return $valid;
-        }
-
-        return $this->toArray();
-    }
-
-
 }
 
