@@ -486,4 +486,44 @@ class Tasks_Test extends Test_Base {
         $this->assertEquals('SAVE_ERROR',   $body->errors[0]->name);
         $this->assertEquals('',             $body->errors[0]->at);
     }
+
+    /**
+     * Testing delete
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testDeleteJSON()
+    {
+        $result     = parent::makeRequest('project/' . $this->project_id . '/task', array($this->task_id), 'DELETE');
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(200,                                $result->getStatus());
+        $this->assertEquals('OK',                               $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+        $this->assertTrue($body->success);
+    }
+
+    /**
+     * Testing a delete with invalid login
+     *
+     * @access public
+     *
+     * @return void
+     */
+    public function testDeleteInvalidLoginJSON()
+    {
+        $result     = parent::makeRequest('project/' . $this->project_id . '/task', array($this->project_id), 'DELETE', null, array('username' => '', 'password' => ''));
+        $headers    = $result->getHeader();
+        $body       = json_decode($result->getBody());
+
+        $this->assertEquals(401,                                $result->getStatus());
+        $this->assertEquals('Authorization Required',           $result->getReasonPhrase());
+        $this->assertEquals('application/json; charset=utf-8',  $headers['content-type']);
+        $this->assertEquals('Invalid Username or Password.',    $body->errors[0]->message);
+        $this->assertEquals('INVALID_LOGIN',                    $body->errors[0]->name);
+        $this->assertEquals('',                                 $body->errors[0]->at);
+    }
 }
